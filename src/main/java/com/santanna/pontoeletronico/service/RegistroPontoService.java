@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,8 +27,6 @@ public class RegistroPontoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private UsuarioService usuarioService; // Se você tiver um serviço de usuário
 
     public RegistroPontoDto registrarEntrada(Long userId) {
         RegistroPonto registroAtivo = repository.findRegistroEntradaAtivo(userId);
@@ -54,26 +51,6 @@ public class RegistroPontoService {
     }
 
 
-//    public RegistroPontoDto registrarSaida(Long userId) {
-//        Usuario usuario = usuarioRepository.findById(userId)
-//                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-//
-//        // Encontra o último registro de ponto de entrada para o usuário
-//        RegistroPonto registroEntrada = repository.findTopByUsuarioAndSaidaIsNullOrderByEntradaDesc(usuario);
-//
-//        if (registroEntrada == null) {
-//            throw new RuntimeException("Não há registro de entrada para o usuário.");
-//        }
-//
-//        // Registra a saída e calcula o tempo decorrido em minutos
-//        LocalDateTime horaSaida = LocalDateTime.now();
-//        registroEntrada.setSaida(horaSaida);
-//        repository.save(registroEntrada);
-//
-//        long minutosTrabalhados = Duration.between(registroEntrada.getEntrada(), horaSaida).toMinutes();
-//
-//        return new RegistroPontoDto(registroEntrada.getId(), registroEntrada.getEntrada(), registroEntrada.getSaida(), minutosTrabalhados);
-//    }
 
     public RegistroPontoDetalhadoDto registrarSaida(Long userId) {
         Usuario usuario = usuarioRepository.findById(userId)
@@ -93,11 +70,11 @@ public class RegistroPontoService {
 
         Duration duracaoTrabalho = Duration.between(registroEntrada.getEntrada(), horaSaida);
         long minutosTrabalhados = duracaoTrabalho.toMinutes();
-        long horasTrabalhadas = duracaoTrabalho.toHours();
+      //  long horasTrabalhadas = duracaoTrabalho.toHours();
 
         long horasExtras = 0;
-        if (horasTrabalhadas > 8) {
-            horasExtras = horasTrabalhadas - 8;
+        if (minutosTrabalhados > 8 * 60) {
+            horasExtras = minutosTrabalhados - 8 * 60;
         }
 
         return new RegistroPontoDetalhadoDto(
@@ -106,34 +83,13 @@ public class RegistroPontoService {
                 horaSaida.toLocalTime(),
                 registroEntrada.getEntrada().toLocalDate(),
                 horaSaida.toLocalDate(),
-                horasTrabalhadas,
+                minutosTrabalhados,
                 horasExtras
         );
     }
 
 
-//    public long calcularTotalMinutosTrabalhados(Long userId) {
-//        Usuario usuario = usuarioRepository.findById(userId)
-//                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-//
-//        // Obtém todos os registros de ponto do usuário
-//        List<RegistroPonto> registros = repository.findByUsuario(usuario);
-//
-//        // Inicializa a variável para armazenar o total de minutos trabalhados
-//        long totalMinutosTrabalhados = 0;
-//
-//        // Itera sobre os registros de ponto e acumula os minutos trabalhados de cada registro
-//        for (RegistroPonto registro : registros) {
-//            if (registro.getSaida() != null) {
-//                // Calcula os minutos trabalhados no registro
-//                long minutosTrabalhados = Duration.between(registro.getEntrada(), registro.getSaida()).toMinutes();
-//                // Acumula os minutos trabalhados no total
-//                totalMinutosTrabalhados += minutosTrabalhados;
-//            }
-//        }
-//
-//        return totalMinutosTrabalhados;
-//    }
+
 public RegistroPontoUsuarioDto buscarRegistrosPontoPorUsuario(Long userId) {
     Usuario usuario = usuarioRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
@@ -146,16 +102,18 @@ public RegistroPontoUsuarioDto buscarRegistrosPontoPorUsuario(Long userId) {
 
     return new RegistroPontoUsuarioDto(usuario.getName(), registrosDto);
 }
+
+
     private RegistroPontoDetalhadoDto toRegistroPontoDetalhadoDto(RegistroPonto registro) {
         LocalDateTime horaSaida = registro.getSaida() != null ? registro.getSaida() : LocalDateTime.now();
 
         Duration duracaoTrabalho = Duration.between(registro.getEntrada(), horaSaida);
         long minutosTrabalhados = duracaoTrabalho.toMinutes();
-        long horasTrabalhadas = duracaoTrabalho.toHours();
+
 
         long horasExtras = 0;
-        if (horasTrabalhadas > 8) {
-            horasExtras = horasTrabalhadas - 8;
+        if (minutosTrabalhados > 8 *60 ) {
+            horasExtras = minutosTrabalhados - (8 * 60);
         }
 
         return new RegistroPontoDetalhadoDto(
@@ -164,7 +122,7 @@ public RegistroPontoUsuarioDto buscarRegistrosPontoPorUsuario(Long userId) {
                 horaSaida.toLocalTime(),
                 registro.getEntrada().toLocalDate(),
                 horaSaida.toLocalDate(),
-                horasTrabalhadas,
+                minutosTrabalhados,
                 horasExtras
         );
     }
@@ -175,15 +133,15 @@ public RegistroPontoUsuarioDto buscarRegistrosPontoPorUsuario(Long userId) {
 
         List<RegistroPonto> registros = repository.findByUsuarioAndDataBetween(usuario, dataInicial, dataFinal);
 
-        long totalHorasExtras = 0;
+        long totalMinutosExtras = 0;
 
         for (RegistroPonto registro : registros) {
-            long horasTrabalhadas = Duration.between(registro.getEntrada(), registro.getSaida()).toHours();
-            long horasExtras = Math.max(horasTrabalhadas - 8, 0);
-            totalHorasExtras += horasExtras;
+            long minutosTrabalhados = Duration.between(registro.getEntrada(), registro.getSaida()).toMinutes();
+            long minutosExtras = Math.max(minutosTrabalhados - (8 * 60), 0); // Convertendo 8 horas para minutos
+            totalMinutosExtras += minutosExtras;
         }
 
-        return totalHorasExtras;
+        return totalMinutosExtras;
     }
 }
 

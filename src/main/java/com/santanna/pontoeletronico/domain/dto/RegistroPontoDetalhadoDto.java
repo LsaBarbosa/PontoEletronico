@@ -16,6 +16,6 @@ public class RegistroPontoDetalhadoDto {
     private LocalTime horaSaida;
     private LocalDate dataEntrada;
     private LocalDate dataSaida;
-    private long horasTrabalhadas;
+    private long MinutosTrabalhados;
     private long horasExtras;
 }
