@@ -10,12 +10,10 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistroPontoDetalhadoDto {
+public class DetailedTimeRecordingDto {
     private Long id;
-    private LocalTime horaEntrada;
-    private LocalTime horaSaida;
-    private LocalDate dataEntrada;
-    private LocalDate dataSaida;
-    private long MinutosTrabalhados;
-    private long horasExtras;
+    private LocalTime endOfWorkTime;
+    private LocalDate endOfWorkDate;
+    private long timeWorkedInMinutes;
+    private long overtime;
 }

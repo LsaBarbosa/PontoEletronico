@@ -1,13 +1,10 @@
 package com.santanna.pontoeletronico.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.santanna.pontoeletronico.domain.dto.RegistroPontoDto;
 import jakarta.persistence.*;
 import lombok.*;
 
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -31,8 +28,8 @@ public class RegistroPonto {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
-    @JsonIgnoreProperties("registrosPonto") // Ignora a serialização do campo 'usuario'
+    @JsonIgnoreProperties("registrosPonto") // Ignora a serialização do campo 'colaborador'
     // ou @JsonIgnore (dependendo do caso)
-    private  Usuario usuario;
+    private Colaborador colaborador;
 
 }

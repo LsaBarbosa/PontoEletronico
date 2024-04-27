@@ -1,10 +1,11 @@
 package com.santanna.pontoeletronico.service;
 
-import com.santanna.pontoeletronico.domain.dto.RegistroPontoDetalhadoDto;
-import com.santanna.pontoeletronico.domain.dto.RegistroPontoDto;
-import com.santanna.pontoeletronico.domain.dto.RegistroPontoUsuarioDto;
-import com.santanna.pontoeletronico.domain.entity.RegistroPonto;
-import com.santanna.pontoeletronico.domain.entity.Usuario;
+import com.santanna.pontoeletronico.domain.dto.RecordDto;
+import com.santanna.pontoeletronico.domain.dto.DetailedTimeRecordingDto;
+
+import com.santanna.pontoeletronico.domain.dto.EmployeeTimeRecordDto;
+import com.santanna.pontoeletronico.domain.entity.Employee;
+import com.santanna.pontoeletronico.domain.entity.RecordWorkTime;
 import com.santanna.pontoeletronico.repository.RegistroPontoRepository;
 
 import com.santanna.pontoeletronico.repository.UsuarioRepository;
@@ -28,36 +29,36 @@ public class RegistroPontoService {
     private UsuarioRepository usuarioRepository;
 
 
-    public RegistroPontoDto registrarEntrada(Long userId) {
-        RegistroPonto registroAtivo = repository.findRegistroEntradaAtivo(userId);
+    public RecordDto registrarEntrada(Long userId) {
+        RecordWorkTime registroAtivo = repository.findRegistroEntradaAtivo(userId);
 
-        if (registroAtivo != null && registroAtivo.getSaida() == null) {
+        if (registroAtivo != null && registroAtivo.getEndOfWork() == null) {
             // Já existe um registro de entrada ativo, atualiza a hora de saída
-            registroAtivo.setSaida(LocalDateTime.now());
+            registroAtivo.setEndOfWork(LocalDateTime.now());
             repository.save(registroAtivo);
         }
 
         // Cria um novo registro de entrada
-        RegistroPonto novoRegistro = new RegistroPonto();
+        RecordWorkTime novoRegistro = new RecordWorkTime();
         // Obtém o usuário pelo ID
-        Usuario usuario = usuarioRepository.findById(userId)
+        Employee employee = usuarioRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        novoRegistro.setUsuario(usuario);
-        novoRegistro.setEntrada(LocalDateTime.now());
+        novoRegistro.setEmployee(employee);
+        novoRegistro.setStartOfWork(LocalDateTime.now());
         repository.save(novoRegistro);
 
-        return new RegistroPontoDto(novoRegistro);
+        return new RecordDto(novoRegistro);
     }
 
 
 
-    public RegistroPontoDetalhadoDto registrarSaida(Long userId) {
-        Usuario usuario = usuarioRepository.findById(userId)
+    public DetailedTimeRecordingDto registrarSaida(Long userId) {
+        Employee employee = usuarioRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         // Encontra o último registro de ponto de entrada para o usuário
-        RegistroPonto registroEntrada = repository.findTopByUsuarioAndSaidaIsNullOrderByEntradaDesc(usuario);
+        RecordWorkTime registroEntrada = repository.findTopByColaboradorAndEndOfWorkIsNullOrderByStartOfWorkDesc(employee);
 
         if (registroEntrada == null) {
             throw new RuntimeException("Não há registro de entrada para o usuário.");
@@ -65,10 +66,10 @@ public class RegistroPontoService {
 
         // Registra a saída e calcula as horas trabalhadas e as horas extras
         LocalDateTime horaSaida = LocalDateTime.now();
-        registroEntrada.setSaida(horaSaida);
+        registroEntrada.setEndOfWork(horaSaida);
         repository.save(registroEntrada);
 
-        Duration duracaoTrabalho = Duration.between(registroEntrada.getEntrada(), horaSaida);
+        Duration duracaoTrabalho = Duration.between(registroEntrada.getStartOfWork(), horaSaida);
         long minutosTrabalhados = duracaoTrabalho.toMinutes();
       //  long horasTrabalhadas = duracaoTrabalho.toHours();
 
@@ -77,11 +78,11 @@ public class RegistroPontoService {
             horasExtras = minutosTrabalhados - 8 * 60;
         }
 
-        return new RegistroPontoDetalhadoDto(
+        return new DetailedTimeRecordingDto(
                 registroEntrada.getId(),
-                registroEntrada.getEntrada().toLocalTime(),
+                registroEntrada.getStartOfWork().toLocalTime(),
                 horaSaida.toLocalTime(),
-                registroEntrada.getEntrada().toLocalDate(),
+                registroEntrada.getStartOfWork().toLocalDate(),
                 horaSaida.toLocalDate(),
                 minutosTrabalhados,
                 horasExtras
@@ -90,24 +91,24 @@ public class RegistroPontoService {
 
 
 
-public RegistroPontoUsuarioDto buscarRegistrosPontoPorUsuario(Long userId) {
-    Usuario usuario = usuarioRepository.findById(userId)
+public EmployeeTimeRecordDto buscarRegistrosPontoPorUsuario(Long userId) {
+    Employee employee = usuarioRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-    List<RegistroPonto> registros = repository.findByUsuario(usuario);
+    List<RecordWorkTime> registros = repository.findByColaborador(employee);
 
-    List<RegistroPontoDetalhadoDto> registrosDto = registros.stream()
+    List<DetailedTimeRecordingDto> registrosDto = registros.stream()
             .map(this::toRegistroPontoDetalhadoDto)
             .collect(Collectors.toList());
 
-    return new RegistroPontoUsuarioDto(usuario.getName(), registrosDto);
+    return new EmployeeTimeRecordDto(employee.getName(), registrosDto);
 }
 
 
-    private RegistroPontoDetalhadoDto toRegistroPontoDetalhadoDto(RegistroPonto registro) {
-        LocalDateTime horaSaida = registro.getSaida() != null ? registro.getSaida() : LocalDateTime.now();
+    private DetailedTimeRecordingDto toRegistroPontoDetalhadoDto(RecordWorkTime registro) {
+        LocalDateTime horaSaida = registro.getEndOfWork() != null ? registro.getEndOfWork() : LocalDateTime.now();
 
-        Duration duracaoTrabalho = Duration.between(registro.getEntrada(), horaSaida);
+        Duration duracaoTrabalho = Duration.between(registro.getStartOfWork(), horaSaida);
         long minutosTrabalhados = duracaoTrabalho.toMinutes();
 
 
@@ -116,11 +117,11 @@ public RegistroPontoUsuarioDto buscarRegistrosPontoPorUsuario(Long userId) {
             horasExtras = minutosTrabalhados - (8 * 60);
         }
 
-        return new RegistroPontoDetalhadoDto(
+        return new DetailedTimeRecordingDto(
                 registro.getId(),
-                registro.getEntrada().toLocalTime(),
+                registro.getStartOfWork().toLocalTime(),
                 horaSaida.toLocalTime(),
-                registro.getEntrada().toLocalDate(),
+                registro.getStartOfWork().toLocalDate(),
                 horaSaida.toLocalDate(),
                 minutosTrabalhados,
                 horasExtras
@@ -128,15 +129,15 @@ public RegistroPontoUsuarioDto buscarRegistrosPontoPorUsuario(Long userId) {
     }
 
     public long calcularHorasExtrasPorIntervaloDeDatas(Long userId, LocalDate dataInicial, LocalDate dataFinal) {
-        Usuario usuario = usuarioRepository.findById(userId)
+        Employee employee = usuarioRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        List<RegistroPonto> registros = repository.findByUsuarioAndDataBetween(usuario, dataInicial, dataFinal);
+        List<RecordWorkTime> registros = repository.findByColaboradorAndDateBetween(employee, dataInicial, dataFinal);
 
         long totalMinutosExtras = 0;
 
-        for (RegistroPonto registro : registros) {
-            long minutosTrabalhados = Duration.between(registro.getEntrada(), registro.getSaida()).toMinutes();
+        for (RecordWorkTime registro : registros) {
+            long minutosTrabalhados = Duration.between(registro.getStartOfWork(), registro.getEndOfWork()).toMinutes();
             long minutosExtras = Math.max(minutosTrabalhados - (8 * 60), 0); // Convertendo 8 horas para minutos
             totalMinutosExtras += minutosExtras;
         }

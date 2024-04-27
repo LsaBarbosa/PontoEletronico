@@ -1,6 +1,5 @@
 package com.santanna.pontoeletronico.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Usuario {
+public class Colaborador {
 
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +21,6 @@ public class Usuario {
 
     private String name;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<RegistroPonto> registrosPonto;
+    @OneToMany(mappedBy = "colaborador", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RecordWorkTime> workTime;
 }

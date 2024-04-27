@@ -5,11 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class RegistroPontoUsuarioDto {
-    private String nome;
-    private List<RegistroPontoDetalhadoDto> registros;
+public class EmployeeRegisterDto {
+
+    private Long id;
+    private String name;
+    private List<RecordCheckinDto> timeRecording;
+
 }
