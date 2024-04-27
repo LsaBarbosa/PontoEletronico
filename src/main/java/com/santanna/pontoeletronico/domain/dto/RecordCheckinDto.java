@@ -6,18 +6,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class RecordDto {
+public class RecordCheckinDto {
     private Long id;
-    private LocalDateTime startOfWork;
+    private String startOfWorkTime;
+    private LocalDate startOfWorkDate;
 
 
-    public RecordDto(RecordWorkTime dto) {
+    public RecordCheckinDto(RecordWorkTime dto) {
         this.id = dto.getId();
-        this.startOfWork = dto.getStartOfWork();
+        this.startOfWorkTime = dto.getStartOfWork().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+        this.startOfWorkDate = dto.getStartOfWork().toLocalDate();
 
     }
 }

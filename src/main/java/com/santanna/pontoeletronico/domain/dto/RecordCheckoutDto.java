@@ -10,10 +10,10 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DetailedTimeRecordingDto {
+public class RecordCheckoutDto {
     private Long id;
-    private LocalTime endOfWorkTime;
+    private String endOfWorkTime;
     private LocalDate endOfWorkDate;
-    private long timeWorkedInMinutes;
-    private long overtime;
+    private String timeWorked;
+    private String overtime;
 }

@@ -9,20 +9,21 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface RegistroPontoRepository extends JpaRepository<RecordWorkTime, Long> {
+public interface TimeRecordingRepository extends JpaRepository<RecordWorkTime, Long> {
 
-    List<RecordWorkTime> findByColaborador(Employee employee);
+    List<RecordWorkTime> findByEmployee(Employee employee);
 
-    RecordWorkTime findTopByColaboradorAndEndOfWorkIsNullOrderByStartOfWorkDesc(Employee employee);
+    RecordWorkTime findTopByEmployeeAndEndOfWorkIsNullOrderByStartOfWorkDesc(Employee employee);
 
-    List<RecordWorkTime> findByColaboradorAndDateBetween(Employee employee, LocalDate dataInicial, LocalDate dataFinal);
+    List<RecordWorkTime> findByEmployeeAndStartOfWorkBetween(Employee employee, LocalDateTime startDate, LocalDateTime endDate);
 
 
-    @Query("SELECT rp FROM RecordWorkTime rp WHERE rp.colaborador.id = :userId AND rp.endOfWork IS NULL")
-    RecordWorkTime findRegistroEntradaAtivo(@Param("userId") Long userId);
+    @Query("SELECT rp FROM RecordWorkTime rp WHERE rp.employee.id = :userId AND rp.endOfWork IS NULL")
+    RecordWorkTime findRegistrationCheckInActive(@Param("userId") Long userId);
 }
 
 

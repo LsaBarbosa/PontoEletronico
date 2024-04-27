@@ -13,23 +13,22 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class RegistroPonto {
+public class RecordWorkTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime entrada;
+    private LocalDateTime startOfWork;
 
-    private LocalDateTime saida;
-    private Long minutosTrabalhadas;
+    private LocalDateTime endOfWork;
+    private Long timeWorkedInMinutes;
 
-    @Column(name = "data")
-    private LocalDate data;
+    //@Column(name = "data")
+   // private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id")
-    @JsonIgnoreProperties("registrosPonto") // Ignora a serialização do campo 'colaborador'
-    // ou @JsonIgnore (dependendo do caso)
-    private Colaborador colaborador;
+    @JoinColumn(name = "employee_id")
+    @JsonIgnoreProperties("RecordWorkTime") // Ignora a serialização do campo 'colaborador'
+    private Employee employee;
 
 }
