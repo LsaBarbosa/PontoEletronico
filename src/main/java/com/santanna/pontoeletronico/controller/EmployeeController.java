@@ -26,18 +26,6 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeDto);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<EmployeeDto> getById(@PathVariable Long id) {
-//        Employee employee = employeeService.getById(id);
-//        EmployeeDto usuarioDto = new EmployeeDto();
-//        usuarioDto.setId(employee.getId());
-//        usuarioDto.setName(employee.getName());
-//        List<RecordCheckinDto> recordDto = employee.getWorkTime().stream()
-//                .map(registro -> new RecordCheckinDto(registro))
-//                .collect(Collectors.toList());
-//        usuarioDto.setTimeRecording(recordDto);
-//        return ResponseEntity.ok(usuarioDto);
-//    }
 
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> getAll() {

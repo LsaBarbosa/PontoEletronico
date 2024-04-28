@@ -67,11 +67,6 @@ public class TimeRecordingService {
         return TimeFormattingUtils.formatRecordCheckoutDto(recordCheckIn);
     }
 
-    private RecordCheckoutDto toRecordCheckoutDto(RecordWorkTime records) {
-        return TimeFormattingUtils.formatRecordCheckoutDto(records);
-    }
-
-
 
     public OvertimeDto calculateOvertimeByDateRange(Long userId, LocalDate startDate, LocalDate endDate) {
         Employee employee = employeeRepository.findById(userId)

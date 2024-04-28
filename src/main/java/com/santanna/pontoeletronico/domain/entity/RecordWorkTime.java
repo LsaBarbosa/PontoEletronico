@@ -23,8 +23,6 @@ public class RecordWorkTime {
     private LocalDateTime endOfWork;
     private Long timeWorkedInMinutes;
 
-    //@Column(name = "data")
-   // private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")

@@ -25,11 +25,6 @@ public class EmployeeService{
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         return mapToDto(employee);
     }
-//
-//    public Employee getById(Long id) {
-//        return repository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-//    }
 
 
     public List<EmployeeDto> getAll() {

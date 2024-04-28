@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface TimeRecordingRepository extends JpaRepository<RecordWorkTime, Long> {
 
-    List<RecordWorkTime> findByEmployee(Employee employee);
+
 
     RecordWorkTime findTopByEmployeeAndEndOfWorkIsNullOrderByStartOfWorkDesc(Employee employee);
 
