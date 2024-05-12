@@ -26,6 +26,10 @@ public class EmployeeService{
         return mapToDto(employee);
     }
 
+    public EmployeeDto getByName(String name) {
+        Employee employee = repository.findByName(name).orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+        return mapToDto(employee);
+    }
 
     public List<EmployeeDto> getAll() {
         List<Employee> employees = repository.findAll();
