@@ -22,8 +22,9 @@ public interface TimeRecordingRepository extends JpaRepository<RecordWorkTime, L
     List<RecordWorkTime> findByEmployeeAndStartOfWorkBetween(Employee employee, LocalDateTime startDate, LocalDateTime endDate);
 
 
-    @Query("SELECT rp FROM RecordWorkTime rp WHERE rp.employee.id = :userId AND rp.endOfWork IS NULL")
-    RecordWorkTime findRegistrationCheckInActive(@Param("userId") Long userId);
+    @Query("SELECT rp FROM RecordWorkTime rp WHERE rp.employee.name = :userName AND rp.endOfWork IS NULL")
+    RecordWorkTime findRegistrationCheckInActive(@Param("userName") String userName);
+
 }
 
 

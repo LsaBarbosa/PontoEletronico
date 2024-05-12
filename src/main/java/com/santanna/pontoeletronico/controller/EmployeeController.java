@@ -1,18 +1,13 @@
 package com.santanna.pontoeletronico.controller;
 
-import com.santanna.pontoeletronico.domain.dto.RecordCheckinDto;
 import com.santanna.pontoeletronico.domain.dto.EmployeeDto;
-import com.santanna.pontoeletronico.domain.entity.Employee;
 import com.santanna.pontoeletronico.service.EmployeeService;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/usuarios")

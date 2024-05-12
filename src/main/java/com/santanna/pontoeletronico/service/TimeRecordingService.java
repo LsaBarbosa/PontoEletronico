@@ -11,6 +11,7 @@ import com.santanna.pontoeletronico.utils.TimeFormattingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -29,8 +30,8 @@ public class TimeRecordingService {
     private EmployeeRepository employeeRepository;
 
 
-    public RecordCheckinDto registerCheckIn(Long userId) {
-        RecordWorkTime activeCheckin = repository.findRegistrationCheckInActive(userId);
+    public RecordCheckinDto registerCheckIn(String name) {
+        RecordWorkTime activeCheckin = repository.findRegistrationCheckInActive(name);
 
         if (activeCheckin != null && activeCheckin.getEndOfWork() == null) {
             // Já existe um registro de entrada ativo, atualiza a hora de saída
@@ -41,7 +42,7 @@ public class TimeRecordingService {
         // Cria um novo registro de entrada
         RecordWorkTime newRecord = new RecordWorkTime();
         // Obtém o usuário pelo ID
-        Employee employee = employeeRepository.findById(userId).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        Employee employee = employeeRepository.findByName(name).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         newRecord.setEmployee(employee);
         newRecord.setStartOfWork(LocalDateTime.now());
@@ -50,8 +51,8 @@ public class TimeRecordingService {
         return new RecordCheckinDto(newRecord);
     }
 
-    public RecordCheckoutDto registerCheckOut(Long userId) {
-        Employee employee = employeeRepository.findById(userId)
+    public RecordCheckoutDto registerCheckOut(String name) {
+        Employee employee = employeeRepository.findByName(name)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         RecordWorkTime recordCheckIn = repository.findTopByEmployeeAndEndOfWorkIsNullOrderByStartOfWorkDesc(employee);
@@ -68,8 +69,8 @@ public class TimeRecordingService {
     }
 
 
-    public OvertimeDto calculateOvertimeByDateRange(Long userId, LocalDate startDate, LocalDate endDate) {
-        Employee employee = employeeRepository.findById(userId)
+    public OvertimeDto calculateOvertimeByDateRange(String name, LocalDate startDate, LocalDate endDate) {
+        Employee employee = employeeRepository.findByName(name)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
@@ -82,8 +83,8 @@ public class TimeRecordingService {
 
 
 
-    public List<DetailedTimeRecordingDto> searchRecordsByDateRange(Long userId, LocalDate startDate, LocalDate endDate) {
-        Employee employee = employeeRepository.findById(userId)
+    public List<DetailedTimeRecordingDto> searchRecordsByDateRange( String name, LocalDate startDate, LocalDate endDate) {
+        Employee employee = employeeRepository.findByName(name)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
