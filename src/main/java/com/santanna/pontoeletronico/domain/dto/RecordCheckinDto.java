@@ -6,9 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+
 import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor
@@ -17,13 +15,13 @@ import java.time.format.DateTimeFormatter;
 public class RecordCheckinDto {
     private Long id;
     private String startOfWorkTime;
-    private LocalDate startOfWorkDate;
+    private String startOfWorkDate;
 
 
     public RecordCheckinDto(RecordWorkTime dto) {
         this.id = dto.getId();
         this.startOfWorkTime = dto.getStartOfWork().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-        this.startOfWorkDate = dto.getStartOfWork().toLocalDate();
+        this.startOfWorkDate = dto.getStartOfWork().toLocalDate().format(DateTimeFormatter.ISO_DATE);
 
     }
 }

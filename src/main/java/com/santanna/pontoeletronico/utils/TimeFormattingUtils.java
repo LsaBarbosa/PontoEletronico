@@ -6,7 +6,6 @@ import com.santanna.pontoeletronico.domain.dto.RecordCheckoutDto;
 import com.santanna.pontoeletronico.domain.entity.RecordWorkTime;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -23,7 +22,7 @@ public class TimeFormattingUtils {
 
         // Obter apenas a hora e a data
         String endOfWorkTime = timeCheckOut.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-        LocalDate endOfWorkDate = timeCheckOut.toLocalDate();
+        String endOfWorkDate = timeCheckOut.toLocalDate().format(DateTimeFormatter.ISO_DATE);
         String timeWorked = formatHoursAndMinutes(timeWorkedInMinutes);
         String overtime = formatHoursAndMinutes(overtimeInMinutes);
 
@@ -48,8 +47,8 @@ public class TimeFormattingUtils {
 
         String startOfWorkTime = timeCheckin.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
         String endOfWorkTime = timeCheckOut.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-        LocalDate startOfWorkDate = timeCheckOut.toLocalDate();
-        LocalDate endOfWorkDate = timeCheckOut.toLocalDate();
+        String startOfWorkDate = timeCheckin.toLocalDate().format(DateTimeFormatter.ISO_DATE);
+        String endOfWorkDate = timeCheckOut.toLocalDate().format(DateTimeFormatter.ISO_DATE);
         String timeWorked = formatHoursAndMinutes(timeWorkedInMinutes);
         String overtime = formatHoursAndMinutes(overtimeInMinutes);
 
