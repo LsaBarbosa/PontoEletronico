@@ -25,6 +25,7 @@ public class CrossConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:4200/");
+        config.addAllowedOrigin("https://ponto-eletronico-nova-alianca.vercel.app");
         config.setAllowedHeaders(Arrays.asList(
                 HttpHeaders.AUTHORIZATION,
                 HttpHeaders.CONTENT_TYPE,

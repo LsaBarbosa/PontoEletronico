@@ -1,22 +1,19 @@
 package com.santanna.pontoeletronico.service;
 
-import com.santanna.pontoeletronico.domain.dto.*;
-
+import com.santanna.pontoeletronico.domain.dto.DetailedTimeRecordingDto;
+import com.santanna.pontoeletronico.domain.dto.OvertimeDto;
+import com.santanna.pontoeletronico.domain.dto.RecordCheckinDto;
+import com.santanna.pontoeletronico.domain.dto.RecordCheckoutDto;
 import com.santanna.pontoeletronico.domain.entity.Employee;
 import com.santanna.pontoeletronico.domain.entity.RecordWorkTime;
-import com.santanna.pontoeletronico.repository.TimeRecordingRepository;
-
 import com.santanna.pontoeletronico.repository.EmployeeRepository;
+import com.santanna.pontoeletronico.repository.TimeRecordingRepository;
 import com.santanna.pontoeletronico.utils.TimeFormattingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,14 +31,14 @@ public class TimeRecordingService {
         RecordWorkTime activeCheckin = repository.findRegistrationCheckInActive(name);
 
         if (activeCheckin != null && activeCheckin.getEndOfWork() == null) {
-            // Já existe um registro de entrada ativo, atualiza a hora de saída
+
             activeCheckin.setEndOfWork(LocalDateTime.now());
             repository.save(activeCheckin);
         }
 
-        // Cria um novo registro de entrada
+
         RecordWorkTime newRecord = new RecordWorkTime();
-        // Obtém o usuário pelo ID
+
         Employee employee = employeeRepository.findByName(name).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         newRecord.setEmployee(employee);
