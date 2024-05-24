@@ -26,9 +26,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee getEmployeeById(Long id) {
-        Employee employee = repository.findById(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(COLABORADOR_NAO_ENCONTRADO));
-        return employee;
     }
 
     @Override
@@ -38,9 +37,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee getByName(String name) {
-        Employee employee = repository.findByName(name)
+        return repository.findByName(name)
                 .orElseThrow(() -> new ObjectNotFoundException(COLABORADOR_NAO_ENCONTRADO));
-        return employee;
     }
 
     @Override
@@ -60,11 +58,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteEmployee(Long id) {
         getEmployeeById(id);
-        repository.deleteById(id);
-    }
-
-
-    public void delete(Long id) {
         repository.deleteById(id);
     }
 

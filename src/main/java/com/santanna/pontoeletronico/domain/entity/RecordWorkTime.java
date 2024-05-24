@@ -24,7 +24,6 @@ public class RecordWorkTime {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id")
     @JsonIgnoreProperties("RecordWorkTime") // Ignora a serialização do campo 'colaborador'
     private Employee employee;
 
