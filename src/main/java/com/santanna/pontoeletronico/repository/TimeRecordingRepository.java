@@ -3,7 +3,6 @@ package com.santanna.pontoeletronico.repository;
 import com.santanna.pontoeletronico.domain.entity.Employee;
 import com.santanna.pontoeletronico.domain.entity.RecordWorkTime;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -21,8 +20,8 @@ public interface TimeRecordingRepository extends JpaRepository<RecordWorkTime, L
     List<RecordWorkTime> findByEmployeeAndStartOfWorkBetween(Employee employee, LocalDateTime startDate, LocalDateTime endDate);
 
 
-    @Query("SELECT rp FROM RecordWorkTime rp WHERE rp.employee.name = :userName AND rp.endOfWork IS NULL")
-    RecordWorkTime findRegistrationCheckInActive(@Param("userName") String userName);
+    @Query("SELECT rp FROM RecordWorkTime rp WHERE rp.employee.name = :name AND rp.endOfWork IS NULL")
+    RecordWorkTime findRegistrationCheckInActive(@Param("name") String name);
 
 }
 

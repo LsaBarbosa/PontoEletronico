@@ -6,13 +6,17 @@ import com.santanna.pontoeletronico.domain.dto.RecordCheckinDto;
 import com.santanna.pontoeletronico.domain.dto.RecordCheckoutDto;
 import com.santanna.pontoeletronico.domain.entity.Employee;
 import com.santanna.pontoeletronico.domain.entity.RecordWorkTime;
+import com.santanna.pontoeletronico.service.EmployeeService;
+import com.santanna.pontoeletronico.service.TimeRecordingService;
 import com.santanna.pontoeletronico.service.exception.DataIntegrityViolationException;
 import com.santanna.pontoeletronico.service.exception.ObjectNotFoundException;
 import com.santanna.pontoeletronico.utils.TimeFormattingUtils;
 import com.santanna.pontoeletronico.repository.EmployeeRepository;
 import com.santanna.pontoeletronico.repository.TimeRecordingRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,41 +25,40 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class TimeRecordingServiceImpl {
+public class TimeRecordingServiceImpl implements TimeRecordingService {
 
-    public static final String COLABORADOR_NAO_ENCONTRADO = "Colaborador não encontrado";
+
     public static final String SEM_REGISTRO_DE_ENTRADA = "Não há registro de entrada para o usuário";
+    public static final String REGISTRO_DE_SAIDA = "Registro de Saída não registrado, encerre o registro de entrada aberto";
     @Autowired
     private TimeRecordingRepository repository;
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private ModelMapper mapper;
+    @Autowired
+    private EmployeeService employeeService;
 
 
-
-    public RecordCheckinDto registerCheckIn(String name) {
-        RecordWorkTime activeCheckin = repository.findRegistrationCheckInActive(name);
+    @Override
+    public RecordCheckinDto registerCheckin(String name) {
+        var employee = employeeService.getByName(name);
+        var activeCheckin = repository.findRegistrationCheckInActive(employee.getName());
 
         if (activeCheckin != null && activeCheckin.getEndOfWork() == null) {
-
-            activeCheckin.setEndOfWork(LocalDateTime.now());
-            repository.save(activeCheckin);
+        throw new DataIntegrityViolationException(REGISTRO_DE_SAIDA);
         }
 
-
-        RecordWorkTime newRecord = new RecordWorkTime();
-
-        Employee employee = employeeRepository.findByName(name).orElseThrow(() -> new ObjectNotFoundException(COLABORADOR_NAO_ENCONTRADO));
-
-        newRecord.setEmployee(employee);
-        newRecord.setStartOfWork(LocalDateTime.now());
-        repository.save(newRecord);
-
-        return new RecordCheckinDto(newRecord);
+        var newRegister = new RecordWorkTime();
+        newRegister.setEmployee(employee);
+        newRegister.setStartOfWork(LocalDateTime.now());
+        var save = repository.save(newRegister);
+        return new RecordCheckinDto(save);
     }
 
+    @Override
     public RecordCheckoutDto registerCheckOut(String name) {
-        Employee employee = employeeRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException(COLABORADOR_NAO_ENCONTRADO));
+        var employee = employeeService.getByName(name);
 
         RecordWorkTime recordCheckIn = repository.findTopByEmployeeAndEndOfWorkIsNullOrderByStartOfWorkDesc(employee);
 
@@ -70,10 +73,9 @@ public class TimeRecordingServiceImpl {
         return TimeFormattingUtils.formatRecordCheckoutDto(recordCheckIn);
     }
 
-
+    @Override
     public OvertimeDto calculateOvertimeByDateRange(String name, LocalDate startDate, LocalDate endDate) {
-        Employee employee = employeeRepository.findByName(name)
-                .orElseThrow(() -> new ObjectNotFoundException(COLABORADOR_NAO_ENCONTRADO));
+        var employee = employeeService.getByName(name);
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay(); // Adiciona um dia e pega o começo do dia seguinte
@@ -84,10 +86,9 @@ public class TimeRecordingServiceImpl {
     }
 
 
-
-    public List<DetailedTimeRecordingDto> searchRecordsByDateRange( String name, LocalDate startDate, LocalDate endDate) {
-        Employee employee = employeeRepository.findByName(name)
-                .orElseThrow(() -> new ObjectNotFoundException(COLABORADOR_NAO_ENCONTRADO));
+    @Override
+    public List<DetailedTimeRecordingDto> searchRecordsByDateRange(String name, LocalDate startDate, LocalDate endDate) {
+        var employee = employeeService.getByName(name);
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay(); // Adiciona um dia e pega o começo do dia seguinte
