@@ -4,19 +4,14 @@ import com.santanna.pontoeletronico.domain.dto.DetailedTimeRecordingDto;
 import com.santanna.pontoeletronico.domain.dto.OvertimeDto;
 import com.santanna.pontoeletronico.domain.dto.RecordCheckinDto;
 import com.santanna.pontoeletronico.domain.dto.RecordCheckoutDto;
-import com.santanna.pontoeletronico.domain.entity.Employee;
 import com.santanna.pontoeletronico.domain.entity.RecordWorkTime;
+import com.santanna.pontoeletronico.repository.TimeRecordingRepository;
 import com.santanna.pontoeletronico.service.EmployeeService;
 import com.santanna.pontoeletronico.service.TimeRecordingService;
 import com.santanna.pontoeletronico.service.exception.DataIntegrityViolationException;
-import com.santanna.pontoeletronico.service.exception.ObjectNotFoundException;
 import com.santanna.pontoeletronico.utils.TimeFormattingUtils;
-import com.santanna.pontoeletronico.repository.EmployeeRepository;
-import com.santanna.pontoeletronico.repository.TimeRecordingRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpStatusCodeException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,10 +27,6 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
     public static final String REGISTRO_DE_SAIDA = "Registro de Saída não registrado, encerre o registro de entrada aberto";
     @Autowired
     private TimeRecordingRepository repository;
-    @Autowired
-    private EmployeeRepository employeeRepository;
-    @Autowired
-    private ModelMapper mapper;
     @Autowired
     private EmployeeService employeeService;
 
