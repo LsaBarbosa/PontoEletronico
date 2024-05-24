@@ -1,8 +1,12 @@
-package com.santanna.pontoeletronico.controller;
+package com.santanna.pontoeletronico.resources;
 
-import com.santanna.pontoeletronico.domain.dto.*;
+import com.santanna.pontoeletronico.domain.dto.DetailedTimeRecordingDto;
+import com.santanna.pontoeletronico.domain.dto.OvertimeDto;
+import com.santanna.pontoeletronico.domain.dto.RecordCheckinDto;
+import com.santanna.pontoeletronico.domain.dto.RecordCheckoutDto;
+import com.santanna.pontoeletronico.domain.entity.Employee;
 import com.santanna.pontoeletronico.service.EmployeeService;
-import com.santanna.pontoeletronico.service.TimeRecordingService;
+import com.santanna.pontoeletronico.service.impl.TimeRecordingServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +21,14 @@ import java.util.List;
 public class TimeRecordingController {
 
     @Autowired
-    private TimeRecordingService service;
+    private TimeRecordingServiceImpl service;
 
     @Autowired
     private EmployeeService employeeService;
 
     @PostMapping("/entrada")
     public ResponseEntity<RecordCheckinDto> registerCheckIn(@RequestParam String name) {
-        EmployeeDto employee = employeeService.getByName(name);
+        Employee employee = employeeService.getByName(name);
         RecordCheckinDto records = service.registerCheckIn(employee.getName());
         return ResponseEntity.ok(records);
     }
