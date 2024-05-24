@@ -6,16 +6,12 @@ import com.santanna.pontoeletronico.repository.EmployeeRepository;
 import com.santanna.pontoeletronico.service.EmployeeService;
 import com.santanna.pontoeletronico.service.exception.DataIntegrityViolationException;
 import com.santanna.pontoeletronico.service.exception.ObjectNotFoundException;
-import com.santanna.pontoeletronico.utils.EmployeeMapperUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static com.santanna.pontoeletronico.utils.EmployeeMapperUtils.mapToDto;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
