@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class EmployeeDto {
-
     private Long id;
     private String name;
 

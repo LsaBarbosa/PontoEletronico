@@ -2,10 +2,11 @@ package com.santanna.pontoeletronico.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,15 +18,12 @@ public class RecordWorkTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private LocalDateTime startOfWork;
-
     private LocalDateTime endOfWork;
     private Long timeWorkedInMinutes;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id")
     @JsonIgnoreProperties("RecordWorkTime") // Ignora a serialização do campo 'colaborador'
     private Employee employee;
 
