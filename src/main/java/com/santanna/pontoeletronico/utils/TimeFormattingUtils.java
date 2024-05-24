@@ -38,13 +38,14 @@ public class TimeFormattingUtils {
 
     public static DetailedTimeRecordingDto toDetailedTimeRecordingDto(RecordWorkTime record) {
         LocalDateTime timeCheckin = record.getEndOfWork() != null ? record.getStartOfWork() : LocalDateTime.now();
-        LocalDateTime timeCheckOut = record.getEndOfWork() != null ? record.getEndOfWork() : LocalDateTime.now();
+        LocalDateTime timeCheckOut = record.getStartOfWork() != null ? record.getEndOfWork() : LocalDateTime.now();
 
         Duration duration = TimeFormattingUtils.calculateDuration(record.getStartOfWork(), timeCheckOut);
         long timeWorkedInMinutes = TimeFormattingUtils.calculateTimeWorkedInMinutes(duration);
         long overtimeInMinutes = TimeFormattingUtils.calculateOvertimeInMinutes(timeWorkedInMinutes);
 
 
+        assert timeCheckin != null;
         String startOfWorkTime = timeCheckin.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
         String endOfWorkTime = timeCheckOut.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
         String startOfWorkDate = timeCheckin.toLocalDate().format(DateTimeFormatter.ISO_DATE);
