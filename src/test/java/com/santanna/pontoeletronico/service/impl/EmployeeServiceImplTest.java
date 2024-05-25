@@ -12,10 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -140,7 +138,7 @@ class EmployeeServiceImplTest {
       }catch (Exception ex){
           assertNotNull(ex);
           assertEquals(DataIntegrityViolationException.class, ex.getClass());
-          assertEquals("COLABORADOR_NAO_ENCONTRADO", ex.getMessage());
+          assertEquals(COLABORADOR_NAO_ENCONTRADO, ex.getMessage());
       }
     }
 
