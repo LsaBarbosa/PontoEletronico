@@ -15,8 +15,8 @@ import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    public static final String COLABORADOR_NAO_ENCONTRADO = "Colaborador não encontrado";
-    public static final String USUARIO_EXISTENTE = "Já existe um colaborador com este nome.";
+    public static final String EMPLOYEE_NOT_FOUND = "Colaborador não encontrado";
+    public static final String EMPLOYEE_ALREADY_EXIST = "Já existe um colaborador com este nome.";
 
 
     @Autowired
@@ -27,7 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getEmployeeById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(COLABORADOR_NAO_ENCONTRADO));
+                .orElseThrow(() -> new ObjectNotFoundException(EMPLOYEE_NOT_FOUND));
     }
 
     @Override
@@ -38,7 +38,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getByName(String name) {
         return repository.findByName(name)
-                .orElseThrow(() -> new ObjectNotFoundException(COLABORADOR_NAO_ENCONTRADO));
+                .orElseThrow(() -> new ObjectNotFoundException(EMPLOYEE_NOT_FOUND));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private void findByName(EmployeeDto employeeDto) {
         Optional<Employee> employee = repository.findByName(employeeDto.getName());
         if (employee.isPresent() && employee.get().getId().equals(employeeDto.getId())) {
-            throw new DataIntegrityViolationException(USUARIO_EXISTENTE);
+            throw new DataIntegrityViolationException(EMPLOYEE_ALREADY_EXIST);
         }
     }
 }
