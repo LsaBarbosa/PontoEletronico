@@ -21,8 +21,8 @@ import static org.mockito.Mockito.*;
 class EmployeeServiceImplTest {
 
     public static final long ID = 1L;
-    public static final String COLABORADOR = "Colaborador";
-    public static final String COLABORADOR_NAO_ENCONTRADO = "Colaborador não encontrado";
+    public static final String EMPLOYEE = "Colaborador";
+    public static final String EMPLOYEE_NOT_FOUND = "Colaborador não encontrado";
     private static final Integer INDEX   = 0;
     @InjectMocks
     private EmployeeServiceImpl employeeService;
@@ -65,20 +65,20 @@ class EmployeeServiceImplTest {
         assertEquals(employee, response.get(0));
         assertEquals(employee.getId(), response.get(0).getId());
         assertEquals(ID,response.get(INDEX).getId());
-        assertEquals(COLABORADOR,response.get(INDEX).getName());
+        assertEquals(EMPLOYEE,response.get(INDEX).getName());
     }
 
     @Test
     @DisplayName("when Get By Name Then Return Employee Name")
     void whenGetByNameThenReturnEmployeeName() {
         when(repository.findByName(anyString())).thenReturn(Optional.of(employee));
-        Employee response = employeeService.getByName(COLABORADOR);
+        Employee response = employeeService.getByName(EMPLOYEE);
         assertNotNull(response);
         assertEquals(employee, response);
         assertEquals(employee.getId(), response.getId());
         assertEquals(employee.getName(), response.getName());
         assertEquals(ID,response.getId());
-        assertEquals(COLABORADOR,response.getName());
+        assertEquals(EMPLOYEE,response.getName());
     }
 
     @Test
@@ -90,7 +90,7 @@ class EmployeeServiceImplTest {
         assertNotNull(response);
         assertEquals(Employee.class, response.getClass());
         assertEquals(ID, response.getId());
-        assertEquals(COLABORADOR, response.getName());
+        assertEquals(EMPLOYEE, response.getName());
     }
 
     @Test
@@ -103,7 +103,7 @@ class EmployeeServiceImplTest {
         assertNotNull(response);
         assertEquals(Employee.class, response.getClass());
         assertEquals(ID, response.getId());
-        assertEquals(COLABORADOR, response.getName());
+        assertEquals(EMPLOYEE, response.getName());
     }
 
     @Test
@@ -119,13 +119,13 @@ class EmployeeServiceImplTest {
     @DisplayName("When Get Employee By Id Then Return Object not found")
     void WhenGetEmployeeByIdThenObjectNotFound() {
         when(repository.findById(anyLong())).thenThrow(
-                new ObjectNotFoundException((COLABORADOR_NAO_ENCONTRADO)));
+                new ObjectNotFoundException((EMPLOYEE_NOT_FOUND)));
         try {
             employeeService.getEmployeeById(ID);
         }catch (Exception e) {
             assertNotNull(e);
             assertEquals(ObjectNotFoundException.class, e.getClass());
-            assertEquals(COLABORADOR_NAO_ENCONTRADO, e.getMessage());
+            assertEquals(EMPLOYEE_NOT_FOUND, e.getMessage());
         }
     }
 
@@ -138,7 +138,7 @@ class EmployeeServiceImplTest {
       }catch (Exception ex){
           assertNotNull(ex);
           assertEquals(DataIntegrityViolationException.class, ex.getClass());
-          assertEquals(COLABORADOR_NAO_ENCONTRADO, ex.getMessage());
+          assertEquals(EMPLOYEE_NOT_FOUND, ex.getMessage());
       }
     }
 
@@ -151,26 +151,26 @@ class EmployeeServiceImplTest {
         }catch (Exception ex){
             assertNotNull(ex);
             assertEquals(DataIntegrityViolationException.class, ex.getClass());
-            assertEquals(COLABORADOR_NAO_ENCONTRADO, ex.getMessage());
+            assertEquals(EMPLOYEE_NOT_FOUND, ex.getMessage());
         }
     }
 
     @Test
     @DisplayName("delete with Object not found exception")
     void deleteWithObjectNotFoundException(){
-        when(repository.findById(anyLong())).thenThrow( new ObjectNotFoundException(COLABORADOR_NAO_ENCONTRADO));
+        when(repository.findById(anyLong())).thenThrow( new ObjectNotFoundException(EMPLOYEE_NOT_FOUND));
 
         try {
             employeeService.deleteEmployee(ID);
         }catch (Exception ex){
             assertEquals(ObjectNotFoundException.class,ex.getClass());
-            assertEquals(COLABORADOR_NAO_ENCONTRADO,ex.getMessage());
+            assertEquals(EMPLOYEE_NOT_FOUND,ex.getMessage());
         }
     }
 
     private void startEmployee() {
-        employee = new Employee(ID, COLABORADOR, null);
-        employeeDto = new EmployeeDto(ID, COLABORADOR);
+        employee = new Employee(ID, EMPLOYEE, null);
+        employeeDto = new EmployeeDto(ID, EMPLOYEE);
         employeeOptional = Optional.of(employee);
     }
 

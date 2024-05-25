@@ -12,13 +12,9 @@ import java.util.List;
 
 @Repository
 public interface TimeRecordingRepository extends JpaRepository<RecordWorkTime, Long> {
-
-
-
     RecordWorkTime findTopByEmployeeAndEndOfWorkIsNullOrderByStartOfWorkDesc(Employee employee);
 
     List<RecordWorkTime> findByEmployeeAndStartOfWorkBetween(Employee employee, LocalDateTime startDate, LocalDateTime endDate);
-
 
     @Query("SELECT rp FROM RecordWorkTime rp WHERE rp.employee.name = :name AND rp.endOfWork IS NULL")
     RecordWorkTime findRegistrationCheckInActive(@Param("name") String name);

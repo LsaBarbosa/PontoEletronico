@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 public class TimeRecordingServiceImpl implements TimeRecordingService {
 
 
-    public static final String SEM_REGISTRO_DE_ENTRADA = "Não há registro de entrada para o usuário";
-    public static final String REGISTRO_DE_SAIDA = "Registro de Saída não registrado, encerre o registro de entrada aberto";
+    public static final String WITHOUT_ENTRY_REGISTRATION = "Não há registro de entrada para o colaborador";
+    public static final String WITHOUT_EXIT_REGISTRATION = "Registro de Saída não registrado, encerre o registro de entrada aberto";
     @Autowired
     private TimeRecordingRepository repository;
     @Autowired
@@ -37,7 +37,7 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
         var activeCheckin = repository.findRegistrationCheckInActive(employee.getName());
 
         if (activeCheckin != null && activeCheckin.getEndOfWork() == null) {
-        throw new DataIntegrityViolationException(REGISTRO_DE_SAIDA);
+        throw new DataIntegrityViolationException(WITHOUT_EXIT_REGISTRATION);
         }
 
         var newRegister = new RecordWorkTime();
@@ -54,7 +54,7 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
         RecordWorkTime recordCheckIn = repository.findTopByEmployeeAndEndOfWorkIsNullOrderByStartOfWorkDesc(employee);
 
         if (recordCheckIn == null) {
-            throw new DataIntegrityViolationException(SEM_REGISTRO_DE_ENTRADA);
+            throw new DataIntegrityViolationException(WITHOUT_ENTRY_REGISTRATION);
         }
 
         LocalDateTime timeCheckOut = LocalDateTime.now();

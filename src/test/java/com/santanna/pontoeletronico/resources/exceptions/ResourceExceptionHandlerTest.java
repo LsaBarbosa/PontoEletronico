@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ResourceExceptionHandlerTest {
 
-    public static final String COLABORADOR_NAO_ENCONTRADO = "Colaborador não encontrado";
-    public static final String USUARIO_EXISTENTE = "Já existe um colaborador com este nome.";
+    public static final String EMPLOYEE_NOT_FOUND = "Colaborador não encontrado";
+    public static final String EMPLOYEE_ALREADY_EXIST = "Já existe um colaborador com este nome.";
 
     @InjectMocks
     private ResourceExceptionHandler ecxeptionHandler;
@@ -30,7 +30,7 @@ class ResourceExceptionHandlerTest {
     void whenObjectNotFoundExceptionThenReturnAResponseEntity() {
         ResponseEntity<StandardError> response = ecxeptionHandler
                 .objectNotFound(
-                        new ObjectNotFoundException(COLABORADOR_NAO_ENCONTRADO),
+                        new ObjectNotFoundException(EMPLOYEE_NOT_FOUND),
                         new MockHttpServletRequest());
 
         assertNotNull(response);
@@ -38,7 +38,7 @@ class ResourceExceptionHandlerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals(ResponseEntity.class, response.getClass());
         assertEquals(StandardError.class, response.getBody().getClass());
-        assertEquals(COLABORADOR_NAO_ENCONTRADO, response.getBody().getError());
+        assertEquals(EMPLOYEE_NOT_FOUND, response.getBody().getError());
         assertEquals(404, response.getBody().getStatus());
         assertNotEquals("/user/2", response.getBody().getPath());
         assertNotEquals(LocalDateTime.now(), response.getBody().getTimestamp());
@@ -48,7 +48,7 @@ class ResourceExceptionHandlerTest {
     void dataIntegrityViolationException() {
         ResponseEntity<StandardError> response = ecxeptionHandler
                 .dataIntegrityViolation(
-                        new DataIntegrityViolationException(USUARIO_EXISTENTE),
+                        new DataIntegrityViolationException(EMPLOYEE_ALREADY_EXIST),
                         new MockHttpServletRequest());
 
         assertNotNull(response);
@@ -56,7 +56,7 @@ class ResourceExceptionHandlerTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(ResponseEntity.class, response.getClass());
         assertEquals(StandardError.class, response.getBody().getClass());
-        assertEquals(USUARIO_EXISTENTE, response.getBody().getError());
+        assertEquals(EMPLOYEE_ALREADY_EXIST, response.getBody().getError());
         assertEquals(400, response.getBody().getStatus());
     }
 }

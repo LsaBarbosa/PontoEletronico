@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 
 class EmployeeControllerTest {
     public static final long ID = 1L;
-    public static final String COLABORADOR = "Colaborador";
+    public static final String EMPLOYEE = "Colaborador";
      private static final Integer INDEX = 0;
     @InjectMocks
     private EmployeeController employeeController;
@@ -61,7 +61,7 @@ class EmployeeControllerTest {
         assertEquals(EmployeeDto.class, response.getBody().get(INDEX).getClass());
 
         assertEquals(ID, response.getBody().get(INDEX).getId());
-        assertEquals(COLABORADOR, response.getBody().get(INDEX).getName());
+        assertEquals(EMPLOYEE, response.getBody().get(INDEX).getName());
 
     }
 
@@ -77,7 +77,7 @@ class EmployeeControllerTest {
         assertNotNull(response.getBody().getName());
         assertEquals(EmployeeDto.class, response.getBody().getClass());
         assertEquals(ID, response.getBody().getId());
-        assertEquals(COLABORADOR, response.getBody().getName());
+        assertEquals(EMPLOYEE, response.getBody().getName());
 
     }
 
@@ -104,7 +104,7 @@ class EmployeeControllerTest {
         assertEquals(ResponseEntity.class, response.getClass());
         assertEquals(EmployeeDto.class, response.getBody().getClass());
         assertEquals(ID, response.getBody().getId());
-        assertEquals(COLABORADOR, response.getBody().getName());
+        assertEquals(EMPLOYEE, response.getBody().getName());
 
     }
 
@@ -120,7 +120,7 @@ class EmployeeControllerTest {
     }
 
     private void startEmployee() {
-        employee = new Employee(ID, COLABORADOR, null);
-        employeeDto = new EmployeeDto(ID, COLABORADOR);
+        employee = new Employee(ID, EMPLOYEE, null);
+        employeeDto = new EmployeeDto(ID, EMPLOYEE);
     }
 }
