@@ -71,7 +71,7 @@ class EmployeeServiceImplTest {
     @Test
     @DisplayName("when Get By Name Then Return Employee Name")
     void whenGetByNameThenReturnEmployeeName() {
-        when(repository.findByName(anyString())).thenReturn(Optional.of(employee));
+        when(repository.findByNameContainsIgnoreCase(anyString())).thenReturn(Optional.of(employee));
         Employee response = employeeService.getByName(EMPLOYEE);
         assertNotNull(response);
         assertEquals(employee, response);
@@ -132,7 +132,7 @@ class EmployeeServiceImplTest {
     @Test
     @DisplayName(" when Create Then Return Data integraty violation")
     void whenCreateThenReturnDataIntegratyViolation(){
-        when(repository.findByName(anyString())).thenReturn(employeeOptional);
+        when(repository.findByNameContainsIgnoreCase(anyString())).thenReturn(employeeOptional);
       try {
           employeeOptional.get().setName("");
       }catch (Exception ex){

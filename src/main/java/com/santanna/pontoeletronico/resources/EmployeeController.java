@@ -34,12 +34,6 @@ public class EmployeeController {
         return ResponseEntity.ok(getAll.stream().map(x -> modelMapper.map(x, EmployeeDto.class)).collect(Collectors.toList()));
     }
 
-    @PostMapping
-    public ResponseEntity<EmployeeDto> create(@RequestBody EmployeeDto employeeDto) {
-        Employee employee = employeeService.createEmployee(employeeDto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(employee.getId()).toUri();
-        return ResponseEntity.created(uri).body(employeeDto);
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeDto> update(@PathVariable Long id, @RequestBody EmployeeDto employeeDto) {

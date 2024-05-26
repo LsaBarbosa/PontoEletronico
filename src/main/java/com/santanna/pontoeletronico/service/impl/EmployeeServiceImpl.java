@@ -37,7 +37,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee getByName(String name) {
-        return repository.findByName(name)
+        return repository.findByNameContainsIgnoreCase(name)
                 .orElseThrow(() -> new ObjectNotFoundException(EMPLOYEE_NOT_FOUND));
     }
 
@@ -62,7 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private void findByName(EmployeeDto employeeDto) {
-        Optional<Employee> employee = repository.findByName(employeeDto.getName());
+        Optional<Employee> employee = repository.findByNameContainsIgnoreCase(employeeDto.getName());
         if (employee.isPresent() && employee.get().getId().equals(employeeDto.getId())) {
             throw new DataIntegrityViolationException(EMPLOYEE_ALREADY_EXIST);
         }
