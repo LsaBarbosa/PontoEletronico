@@ -1,5 +1,6 @@
 package com.santanna.pontoeletronico.domain.entity;
 
+import com.santanna.pontoeletronico.domain.dto.auth.RegisterDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,7 +36,6 @@ public class Employee implements UserDetails {
         this.password = password;
         this.role = role;
     }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (this.role == EmployeeRole.ADMIN)

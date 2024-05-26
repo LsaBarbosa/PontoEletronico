@@ -6,6 +6,8 @@ import com.santanna.pontoeletronico.domain.dto.auth.RegisterDTO;
 import com.santanna.pontoeletronico.domain.entity.Employee;
 import com.santanna.pontoeletronico.repository.EmployeeRepository;
 import com.santanna.pontoeletronico.security.TokenService;
+import com.santanna.pontoeletronico.service.Auth;
+import com.santanna.pontoeletronico.service.impl.AuthorizationServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,32 +24,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     @Autowired
-    private  AuthenticationManager authenticationManager;
-    @Autowired
-    private EmployeeRepository repository;
-    @Autowired
-    private TokenService tokenService;
+    private Auth auth;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AuthenticationDTO data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.name(), data.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
-
-        var token = tokenService.generateToken((Employee) auth.getPrincipal());
-
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody AuthenticationDTO data) {
+        var token = auth.login(data);
+        return ResponseEntity.ok().body(token);
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterDTO data) {
-        if (this.repository.findByName(data.name()) != null)
-            return ResponseEntity.badRequest().build();
-
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        Employee newEmployee = new Employee(data.name(), encryptedPassword, data.role() );
-
-        this.repository.save(newEmployee);
-
+    public ResponseEntity<RegisterDTO> register(@RequestBody RegisterDTO data) {
+       auth.register(data);
         return ResponseEntity.ok().build();
     }
 }
