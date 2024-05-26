@@ -22,5 +22,5 @@ public class Employee {
     private String name;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<RecordWorkTime> workTime;
+    private List<TimeRecording> workTime;
 }

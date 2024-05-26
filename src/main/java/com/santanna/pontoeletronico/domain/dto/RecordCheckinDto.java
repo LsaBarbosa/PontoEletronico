@@ -1,6 +1,6 @@
 package com.santanna.pontoeletronico.domain.dto;
 
-import com.santanna.pontoeletronico.domain.entity.RecordWorkTime;
+import com.santanna.pontoeletronico.domain.entity.TimeRecording;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ public class RecordCheckinDto {
     private String startOfWorkDate;
 
 
-    public RecordCheckinDto(RecordWorkTime dto) {
+    public RecordCheckinDto(TimeRecording dto) {
         this.id = dto.getId();
         this.startOfWorkTime = dto.getStartOfWork().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
         this.startOfWorkDate = dto.getStartOfWork().toLocalDate().format(DateTimeFormatter.ISO_DATE);

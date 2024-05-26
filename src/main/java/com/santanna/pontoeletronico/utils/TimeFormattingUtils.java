@@ -3,7 +3,7 @@ package com.santanna.pontoeletronico.utils;
 import com.santanna.pontoeletronico.domain.dto.DetailedTimeRecordingDto;
 import com.santanna.pontoeletronico.domain.dto.OvertimeDto;
 import com.santanna.pontoeletronico.domain.dto.RecordCheckoutDto;
-import com.santanna.pontoeletronico.domain.entity.RecordWorkTime;
+import com.santanna.pontoeletronico.domain.entity.TimeRecording;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class TimeFormattingUtils {
 
-    public static RecordCheckoutDto formatRecordCheckoutDto(RecordWorkTime record) {
+    public static RecordCheckoutDto formatRecordCheckoutDto(TimeRecording record) {
         LocalDateTime timeCheckOut = record.getEndOfWork() != null ? record.getEndOfWork() : LocalDateTime.now();
 
         Duration duration = TimeFormattingUtils.calculateDuration(record.getStartOfWork(), timeCheckOut);
@@ -36,7 +36,7 @@ public class TimeFormattingUtils {
     }
 
 
-    public static DetailedTimeRecordingDto toDetailedTimeRecordingDto(RecordWorkTime record) {
+    public static DetailedTimeRecordingDto toDetailedTimeRecordingDto(TimeRecording record) {
         LocalDateTime timeCheckin = record.getEndOfWork() != null ? record.getStartOfWork() : LocalDateTime.now();
         LocalDateTime timeCheckOut = record.getStartOfWork() != null ? record.getEndOfWork() : LocalDateTime.now();
 
@@ -65,10 +65,10 @@ public class TimeFormattingUtils {
         );
     }
 
-    public static OvertimeDto calculateOvertime(List<RecordWorkTime> records) {
+    public static OvertimeDto calculateOvertime(List<TimeRecording> records) {
         long totalOvertimeInMinutes = 0;
 
-        for (RecordWorkTime registro : records) {
+        for (TimeRecording registro : records) {
             long timeWorkedInMinutes = Duration.between(registro.getStartOfWork(), registro.getEndOfWork()).toMinutes();
             long overtimeInMinutes = Math.max(timeWorkedInMinutes - (1 * 1), 0); // Convertendo 8 horas para minutos
             totalOvertimeInMinutes += overtimeInMinutes;
