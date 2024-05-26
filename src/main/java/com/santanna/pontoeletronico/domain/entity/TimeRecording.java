@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class RecordWorkTime {
+public class TimeRecording {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -17,6 +17,4 @@ public class DetailedTimeRecordingDto {
     private String endDate;
     private String timeWorked;
     private String overtime;
-
-
 }

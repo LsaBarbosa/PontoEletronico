@@ -4,7 +4,7 @@ import com.santanna.pontoeletronico.domain.dto.DetailedTimeRecordingDto;
 import com.santanna.pontoeletronico.domain.dto.OvertimeDto;
 import com.santanna.pontoeletronico.domain.dto.RecordCheckinDto;
 import com.santanna.pontoeletronico.domain.dto.RecordCheckoutDto;
-import com.santanna.pontoeletronico.domain.entity.RecordWorkTime;
+import com.santanna.pontoeletronico.domain.entity.TimeRecording;
 import com.santanna.pontoeletronico.repository.TimeRecordingRepository;
 import com.santanna.pontoeletronico.service.EmployeeService;
 import com.santanna.pontoeletronico.service.TimeRecordingService;
@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 @Service
 public class TimeRecordingServiceImpl implements TimeRecordingService {
 
-
     public static final String WITHOUT_ENTRY_REGISTRATION = "Não há registro de entrada para o colaborador";
     public static final String WITHOUT_EXIT_REGISTRATION = "Registro de Saída não registrado, encerre o registro de entrada aberto";
     @Autowired
@@ -37,10 +36,10 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
         var activeCheckin = repository.findRegistrationCheckInActive(employee.getName());
 
         if (activeCheckin != null && activeCheckin.getEndOfWork() == null) {
-        throw new DataIntegrityViolationException(WITHOUT_EXIT_REGISTRATION);
+            throw new DataIntegrityViolationException(WITHOUT_EXIT_REGISTRATION);
         }
 
-        var newRegister = new RecordWorkTime();
+        var newRegister = new TimeRecording();
         newRegister.setEmployee(employee);
         newRegister.setStartOfWork(LocalDateTime.now());
         var save = repository.save(newRegister);
@@ -51,7 +50,7 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
     public RecordCheckoutDto registerCheckOut(String name) {
         var employee = employeeService.getByName(name);
 
-        RecordWorkTime recordCheckIn = repository.findTopByEmployeeAndEndOfWorkIsNullOrderByStartOfWorkDesc(employee);
+        TimeRecording recordCheckIn = repository.findTopByEmployeeAndEndOfWorkIsNullOrderByStartOfWorkDesc(employee);
 
         if (recordCheckIn == null) {
             throw new DataIntegrityViolationException(WITHOUT_ENTRY_REGISTRATION);
@@ -71,7 +70,7 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay(); // Adiciona um dia e pega o começo do dia seguinte
 
-        List<RecordWorkTime> records = repository.findByEmployeeAndStartOfWorkBetween(employee, startDateTime, endDateTime);
+        List<TimeRecording> records = repository.findByEmployeeAndStartOfWorkBetween(employee, startDateTime, endDateTime);
 
         return TimeFormattingUtils.calculateOvertime(records);
     }
@@ -84,7 +83,7 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay(); // Adiciona um dia e pega o começo do dia seguinte
 
-        List<RecordWorkTime> records = repository.findByEmployeeAndStartOfWorkBetween(employee, startDateTime, endDateTime);
+        List<TimeRecording> records = repository.findByEmployeeAndStartOfWorkBetween(employee, startDateTime, endDateTime);
 
         return records.stream()
                 .map(TimeFormattingUtils::toDetailedTimeRecordingDto)
