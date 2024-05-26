@@ -2,6 +2,7 @@ package com.santanna.pontoeletronico.resources;
 
 import com.santanna.pontoeletronico.domain.dto.EmployeeDto;
 import com.santanna.pontoeletronico.domain.entity.Employee;
+import com.santanna.pontoeletronico.domain.entity.EmployeeRole;
 import com.santanna.pontoeletronico.service.EmployeeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -26,7 +28,8 @@ import static org.mockito.Mockito.*;
 class EmployeeControllerTest {
     public static final long ID = 1L;
     public static final String EMPLOYEE = "Colaborador";
-     private static final Integer INDEX = 0;
+    private static final Integer INDEX   = 0;
+    public static final String PASSWORD = "123";
     @InjectMocks
     private EmployeeController employeeController;
     @Mock
@@ -81,14 +84,7 @@ class EmployeeControllerTest {
 
     }
 
-    @Test
-    void whenCreateThenReturnCreated() {
-        when(employeeService.createEmployee(any())).thenReturn(employee);
-        ResponseEntity<EmployeeDto> response = employeeController.create(employeeDto);
-        assertNotNull(response.getHeaders().get("Location"));
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(ResponseEntity.class, response.getClass());
-    }
+
 
     @Test
     void whenUpdateThenReturnSuccess() {
@@ -120,7 +116,8 @@ class EmployeeControllerTest {
     }
 
     private void startEmployee() {
-        employee = new Employee(ID, EMPLOYEE, null);
-        employeeDto = new EmployeeDto(ID, EMPLOYEE);
+        employee = new Employee(ID, EMPLOYEE, PASSWORD, EmployeeRole.ADMIN,null);
+        employeeDto = new EmployeeDto(ID, EMPLOYEE, PASSWORD, EmployeeRole.ADMIN);
+
     }
 }

@@ -2,6 +2,7 @@ package com.santanna.pontoeletronico.service.impl;
 
 import com.santanna.pontoeletronico.domain.dto.EmployeeDto;
 import com.santanna.pontoeletronico.domain.entity.Employee;
+import com.santanna.pontoeletronico.domain.entity.EmployeeRole;
 import com.santanna.pontoeletronico.repository.EmployeeRepository;
 import com.santanna.pontoeletronico.service.exception.DataIntegrityViolationException;
 import com.santanna.pontoeletronico.service.exception.ObjectNotFoundException;
@@ -24,6 +25,7 @@ class EmployeeServiceImplTest {
     public static final String EMPLOYEE = "Colaborador";
     public static final String EMPLOYEE_NOT_FOUND = "Colaborador não encontrado";
     private static final Integer INDEX   = 0;
+    public static final String PASSWORD = "123";
     @InjectMocks
     private EmployeeServiceImpl employeeService;
     @Mock
@@ -71,7 +73,7 @@ class EmployeeServiceImplTest {
     @Test
     @DisplayName("when Get By Name Then Return Employee Name")
     void whenGetByNameThenReturnEmployeeName() {
-        when(repository.findByName(anyString())).thenReturn(Optional.of(employee));
+        when(repository.findByNameContainsIgnoreCase(anyString())).thenReturn(Optional.of(employee));
         Employee response = employeeService.getByName(EMPLOYEE);
         assertNotNull(response);
         assertEquals(employee, response);
@@ -132,7 +134,7 @@ class EmployeeServiceImplTest {
     @Test
     @DisplayName(" when Create Then Return Data integraty violation")
     void whenCreateThenReturnDataIntegratyViolation(){
-        when(repository.findByName(anyString())).thenReturn(employeeOptional);
+        when(repository.findByNameContainsIgnoreCase(anyString())).thenReturn(employeeOptional);
       try {
           employeeOptional.get().setName("");
       }catch (Exception ex){
@@ -169,8 +171,8 @@ class EmployeeServiceImplTest {
     }
 
     private void startEmployee() {
-        employee = new Employee(ID, EMPLOYEE, null);
-        employeeDto = new EmployeeDto(ID, EMPLOYEE);
+        employee = new Employee(ID, EMPLOYEE, PASSWORD,EmployeeRole.ADMIN,null);
+        employeeDto = new EmployeeDto(ID, EMPLOYEE, PASSWORD, EmployeeRole.ADMIN);
         employeeOptional = Optional.of(employee);
     }
 
