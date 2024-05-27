@@ -1,7 +1,5 @@
 package com.santanna.pontoeletronico.security;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.santanna.pontoeletronico.domain.entity.Employee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
