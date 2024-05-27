@@ -26,6 +26,11 @@ import static org.mockito.Mockito.when;
 
 class AuthTest {
 
+    public static final String NAME = "testUser";
+    public static final String PASSWORD = "testPassword";
+    public static final EmployeeRole EMPLOYEE_ROLE_ADMIN = EmployeeRole.ADMIN;
+    public static final EmployeeRole EMPLOYEE_ROLE_USER = EmployeeRole.USER;
+    public static final String TOKEN = "testToken";
     @InjectMocks
     private Auth authService;
 
@@ -49,22 +54,22 @@ class AuthTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        authenticationDTO = new AuthenticationDTO("testUser", "testPassword");
-        registerDTO = new RegisterDTO("testUser", "testPassword", EmployeeRole.ADMIN);
-        employee = new Employee("testUser", new BCryptPasswordEncoder().encode("testPassword"), EmployeeRole.USER);
-        employeeDto = new EmployeeDto(1L, "testUser", "testPassword", EmployeeRole.ADMIN);
+        authenticationDTO = new AuthenticationDTO(NAME, PASSWORD);
+        registerDTO = new RegisterDTO(NAME, PASSWORD, EMPLOYEE_ROLE_ADMIN);
+        employee = new Employee(NAME, new BCryptPasswordEncoder().encode(PASSWORD), EMPLOYEE_ROLE_USER);
+        employeeDto = new EmployeeDto(1L, NAME, PASSWORD, EMPLOYEE_ROLE_ADMIN);
     }
 
     @Test
     public void testLoginSuccess() {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(new UsernamePasswordAuthenticationToken(employee, employee.getPassword()));
-        when(tokenService.generateToken(any(Employee.class))).thenReturn("testToken");
+        when(tokenService.generateToken(any(Employee.class))).thenReturn(TOKEN);
 
         LoginResponseDTO response = authService.login(authenticationDTO);
 
         assertNotNull(response);
-        assertEquals("testToken", response.token());
+        assertEquals(TOKEN, response.token());
     }
 
     @Test

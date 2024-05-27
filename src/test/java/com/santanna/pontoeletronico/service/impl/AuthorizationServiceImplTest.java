@@ -10,12 +10,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 class AuthorizationServiceImplTest {
+    public static final String USERNAME_NOT_FOUND = "Username not found";
     @Mock
     private EmployeeRepository repository;
 
@@ -46,7 +45,7 @@ class AuthorizationServiceImplTest {
     void testLoadUserByUsername_WhenUserDoesNotExist_ThrowUsernameNotFoundException() {
         // Arrange
         String username = "non_existing_user";
-        when(repository.findByName(username)).thenThrow(new UsernameNotFoundException("Username not found"));
+        when(repository.findByName(username)).thenThrow(new UsernameNotFoundException(USERNAME_NOT_FOUND));
         try {
             authService.loadUserByUsername(username);
         } catch (UsernameNotFoundException e) {
