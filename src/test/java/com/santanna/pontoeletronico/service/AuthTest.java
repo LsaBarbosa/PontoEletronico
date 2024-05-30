@@ -31,6 +31,7 @@ class AuthTest {
     public static final EmployeeRole EMPLOYEE_ROLE_ADMIN = EmployeeRole.ADMIN;
     public static final EmployeeRole EMPLOYEE_ROLE_USER = EmployeeRole.USER;
     public static final String TOKEN = "testToken";
+    public static final String ACCESS_DENIED = "Usuário não autorizado para cadastro.";
     @InjectMocks
     private Auth authService;
 
@@ -93,6 +94,6 @@ class AuthTest {
             authService.register(registerDTO);
         });
 
-        assertEquals(Auth.EMPLOYEE_ALREADY_EXIST, exception.getMessage());
+        assertEquals(Auth.ACCESS_DENIED, exception.getMessage());
     }
 }
