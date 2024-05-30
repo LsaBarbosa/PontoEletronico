@@ -24,7 +24,7 @@ class TokenServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        AutoCloseable autoCloseable = MockitoAnnotations.openMocks(this);
         // Defina o valor do secret através da reflexão
         ReflectionTestUtils.setField(tokenService, "secret", "my-secret-key");
         // Configurar mock do employee

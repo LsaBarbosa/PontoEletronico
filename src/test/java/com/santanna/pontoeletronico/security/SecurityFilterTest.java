@@ -34,7 +34,7 @@ class SecurityFilterTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+        AutoCloseable autoCloseable = MockitoAnnotations.openMocks(this);
         SecurityContextHolder.clearContext();
     }
 
