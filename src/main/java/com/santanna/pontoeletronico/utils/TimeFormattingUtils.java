@@ -20,7 +20,6 @@ public class TimeFormattingUtils {
         long timeWorkedInMinutes = TimeFormattingUtils.calculateTimeWorkedInMinutes(duration);
         long overtimeInMinutes = TimeFormattingUtils.calculateOvertimeInMinutes(timeWorkedInMinutes);
 
-        // Obter apenas a hora e a data
         String endOfWorkTime = timeCheckOut.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
         String endOfWorkDate = timeCheckOut.toLocalDate().format(DateTimeFormatter.ISO_DATE);
         String timeWorked = formatHoursAndMinutes(timeWorkedInMinutes);
@@ -70,11 +69,10 @@ public class TimeFormattingUtils {
 
         for (TimeRecording registro : records) {
             long timeWorkedInMinutes = Duration.between(registro.getStartOfWork(), registro.getEndOfWork()).toMinutes();
-            long overtimeInMinutes = Math.max(timeWorkedInMinutes - (1 * 1), 0); // Convertendo 8 horas para minutos
+            long overtimeInMinutes = Math.max(timeWorkedInMinutes - (8 * 60), 0);
             totalOvertimeInMinutes += overtimeInMinutes;
         }
 
-        // Formatar o tempo total de horas extras para o formato HH:mm
         String totalOvertime = formatHoursAndMinutes(totalOvertimeInMinutes);
 
         return new OvertimeDto(totalOvertime);
@@ -95,7 +93,7 @@ public class TimeFormattingUtils {
     }
 
     public static long calculateOvertimeInMinutes(long timeWorkedInMinutes) {
-        return Math.max(timeWorkedInMinutes - (1 * 1), 0);
+        return Math.max(timeWorkedInMinutes - (8 * 60), 0);
     }
 
 }

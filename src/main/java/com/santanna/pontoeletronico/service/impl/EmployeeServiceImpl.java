@@ -1,6 +1,7 @@
 package com.santanna.pontoeletronico.service.impl;
 
 import com.santanna.pontoeletronico.domain.dto.EmployeeDto;
+import com.santanna.pontoeletronico.domain.dto.auth.RegisterDTO;
 import com.santanna.pontoeletronico.domain.entity.Employee;
 import com.santanna.pontoeletronico.repository.EmployeeRepository;
 import com.santanna.pontoeletronico.service.EmployeeService;
@@ -8,6 +9,7 @@ import com.santanna.pontoeletronico.service.exception.DataIntegrityViolationExce
 import com.santanna.pontoeletronico.service.exception.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +25,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private ModelMapper modelMapper;
     @Autowired
     private EmployeeRepository repository;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Override
     public Employee getEmployeeById(Long id) {
         return repository.findById(id)
@@ -48,17 +51,21 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee updateEmployee(EmployeeDto employeeDto) {
-        findByName(employeeDto);
-        getEmployeeById(employeeDto.getId());
-        return repository.save(modelMapper.map(employeeDto, Employee.class));
+    public Employee updateEmployee(String name, RegisterDTO registerDTO) {
+        Employee existingEmployee = getByName(name);
+        if (existingEmployee == null) {
+            throw new RuntimeException("Employee not found");
+        }
+        existingEmployee.setPassword(passwordEncoder.encode(registerDTO.password()));
+        existingEmployee.setRole(registerDTO.role());
+
+        return repository.save(existingEmployee);
     }
 
-
     @Override
-    public void deleteEmployee(Long id) {
-        getEmployeeById(id);
-        repository.deleteById(id);
+    public void deleteEmployee(String name) {
+        Employee existingEmployee = getByName(name);
+        repository.deleteById(existingEmployee.getId());
     }
 
     private void findByName(EmployeeDto employeeDto) {
