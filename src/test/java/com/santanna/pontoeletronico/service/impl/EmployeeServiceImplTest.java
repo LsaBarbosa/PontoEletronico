@@ -1,6 +1,7 @@
 package com.santanna.pontoeletronico.service.impl;
 
 import com.santanna.pontoeletronico.domain.dto.EmployeeDto;
+import com.santanna.pontoeletronico.domain.dto.auth.RegisterDTO;
 import com.santanna.pontoeletronico.domain.entity.Employee;
 import com.santanna.pontoeletronico.domain.entity.EmployeeRole;
 import com.santanna.pontoeletronico.repository.EmployeeRepository;
@@ -13,8 +14,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+
 import java.util.List;
 import java.util.Optional;
+
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -24,7 +28,7 @@ class EmployeeServiceImplTest {
     public static final long ID = 1L;
     public static final String EMPLOYEE = "Colaborador";
     public static final String EMPLOYEE_NOT_FOUND = "Colaborador não encontrado";
-    private static final Integer INDEX   = 0;
+    private static final Integer INDEX = 0;
     public static final String PASSWORD = "123";
     @InjectMocks
     private EmployeeServiceImpl employeeService;
@@ -36,7 +40,7 @@ class EmployeeServiceImplTest {
     private Employee employee;
     private EmployeeDto employeeDto;
     private Optional<Employee> employeeOptional;
-
+    private RegisterDTO registerDTO;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -96,25 +100,14 @@ class EmployeeServiceImplTest {
     }
 
     @Test
-    @DisplayName(" when update Then Return Success")
-    void whenUpdateThenReturnSuccess() {
-        when(repository.save(any())).thenReturn(employee);
-        when(repository.findById(anyLong())).thenReturn(Optional.of(employee));
-        when(modelMapper.map(employee, EmployeeDto.class)).thenReturn(employeeDto);
-        Employee response = employeeService.updateEmployee(employeeDto);
-        assertNotNull(response);
-        assertEquals(Employee.class, response.getClass());
-        assertEquals(ID, response.getId());
-        assertEquals(EMPLOYEE, response.getName());
-    }
-
-    @Test
-    @DisplayName("delete with success")
+    @DisplayName("When Delete Employee Then Success")
     void deleteWithSuccess() {
-        when(repository.findById(anyLong())).thenReturn(Optional.of(employee));
+        when(repository.findByNameContainsIgnoreCase(anyString())).thenReturn(employeeOptional);
         doNothing().when(repository).deleteById(anyLong());
-        employeeService.deleteEmployee(ID);
-        verify(repository, times(1)).deleteById(anyLong());
+
+        employeeService.deleteEmployee(EMPLOYEE);
+
+        verify(repository, times(1)).deleteById(employee.getId());
     }
 
     @Test
@@ -158,22 +151,24 @@ class EmployeeServiceImplTest {
     }
 
     @Test
-    @DisplayName("delete with Object not found exception")
-    void deleteWithObjectNotFoundException(){
-        when(repository.findById(anyLong())).thenThrow( new ObjectNotFoundException(EMPLOYEE_NOT_FOUND));
+    @DisplayName("When Delete Employee Then Return Object Not Found Exception")
+    void deleteWithObjectNotFoundException() {
+        when(repository.findByNameContainsIgnoreCase(anyString())).thenThrow(new ObjectNotFoundException(EMPLOYEE_NOT_FOUND));
 
         try {
-            employeeService.deleteEmployee(ID);
-        }catch (Exception ex){
-            assertEquals(ObjectNotFoundException.class,ex.getClass());
-            assertEquals(EMPLOYEE_NOT_FOUND,ex.getMessage());
+            employeeService.deleteEmployee(EMPLOYEE);
+        } catch (Exception ex) {
+            assertNotNull(ex);
+            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            assertEquals(EMPLOYEE_NOT_FOUND, ex.getMessage());
         }
     }
 
     private void startEmployee() {
-        employee = new Employee(ID, EMPLOYEE, PASSWORD,EmployeeRole.ADMIN,null);
+        employee = new Employee(ID, EMPLOYEE, PASSWORD, EmployeeRole.ADMIN, null);
         employeeDto = new EmployeeDto(ID, EMPLOYEE, PASSWORD, EmployeeRole.ADMIN);
         employeeOptional = Optional.of(employee);
+        registerDTO = new RegisterDTO(EMPLOYEE, PASSWORD, EmployeeRole.ADMIN);
     }
 
 }

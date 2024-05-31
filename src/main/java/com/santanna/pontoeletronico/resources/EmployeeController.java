@@ -1,15 +1,14 @@
 package com.santanna.pontoeletronico.resources;
 
 import com.santanna.pontoeletronico.domain.dto.EmployeeDto;
+import com.santanna.pontoeletronico.domain.dto.auth.RegisterDTO;
 import com.santanna.pontoeletronico.domain.entity.Employee;
 import com.santanna.pontoeletronico.service.EmployeeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,16 +34,15 @@ public class EmployeeController {
     }
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDto> update(@PathVariable Long id, @RequestBody EmployeeDto employeeDto) {
-        employeeDto.setId(id);
-        Employee employee = employeeService.updateEmployee(employeeDto);
+    @PutMapping()
+    public ResponseEntity<EmployeeDto> update(@RequestParam String name, @RequestBody RegisterDTO registerDTO) {
+        Employee employee = employeeService.updateEmployee(name, registerDTO);
         return ResponseEntity.ok().body(modelMapper.map(employee, EmployeeDto.class));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<EmployeeDto> delete(@PathVariable Long id) {
-        employeeService.deleteEmployee(id);
+    @DeleteMapping()
+    public ResponseEntity<EmployeeDto> delete(@RequestParam String name) {
+        employeeService.deleteEmployee(name);
         return ResponseEntity.noContent().build();
     }
 }

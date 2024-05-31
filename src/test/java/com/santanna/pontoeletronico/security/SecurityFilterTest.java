@@ -34,13 +34,13 @@ class SecurityFilterTest {
 
     @BeforeEach
     public void setUp() {
-        AutoCloseable autoCloseable = MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.openMocks(this);
         SecurityContextHolder.clearContext();
     }
 
     @Test
     public void doFilterInternal_withValidToken_shouldAuthenticateUser() throws IOException, ServletException {
-        // Arrange
+
         String token = "validToken";
         String username = "validUser";
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -56,10 +56,8 @@ class SecurityFilterTest {
         when(tokenService.validateToken(token)).thenReturn(username);
         when(repository.findByName(username)).thenReturn(userDetails);
 
-        // Act
         securityFilter.doFilterInternal(request, response, filterChain);
 
-        // Assert
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         assertNotNull(authentication);
         assertNotNull(authentication.getPrincipal());
@@ -70,7 +68,7 @@ class SecurityFilterTest {
 
     @Test
     public void doFilterInternal_withInvalidToken_shouldNotAuthenticateUser() throws ServletException, IOException {
-        // Arrange
+
         String token = "invalidToken";
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Authorization", "Bearer " + token);
@@ -78,10 +76,10 @@ class SecurityFilterTest {
 
         when(tokenService.validateToken(token)).thenReturn(null);
 
-        // Act
+
         securityFilter.doFilterInternal(request, response, filterChain);
 
-        // Assert
+
         assertNull(SecurityContextHolder.getContext().getAuthentication());
 
         verify(filterChain, times(1)).doFilter(request, response);
@@ -89,14 +87,13 @@ class SecurityFilterTest {
 
     @Test
     public void doFilterInternal_withNoToken_shouldNotAuthenticateUser() throws ServletException, IOException {
-        // Arrange
+
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
 
-        // Act
+
         securityFilter.doFilterInternal(request, response, filterChain);
 
-        // Assert
         assertNull(SecurityContextHolder.getContext().getAuthentication());
 
         verify(filterChain, times(1)).doFilter(request, response);

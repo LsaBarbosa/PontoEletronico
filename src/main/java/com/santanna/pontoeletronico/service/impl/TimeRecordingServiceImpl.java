@@ -68,7 +68,7 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
         var employee = employeeService.getByName(name);
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
-        LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay(); // Adiciona um dia e pega o começo do dia seguinte
+        LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay();
 
         List<TimeRecording> records = repository.findByEmployeeAndStartOfWorkBetween(employee, startDateTime, endDateTime);
 
@@ -81,7 +81,7 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
         var employee = employeeService.getByName(name);
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
-        LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay(); // Adiciona um dia e pega o começo do dia seguinte
+        LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay();
 
         List<TimeRecording> records = repository.findByEmployeeAndStartOfWorkBetween(employee, startDateTime, endDateTime);
 

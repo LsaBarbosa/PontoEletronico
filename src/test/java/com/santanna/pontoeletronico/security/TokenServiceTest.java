@@ -24,10 +24,10 @@ class TokenServiceTest {
 
     @BeforeEach
     void setUp() {
-        AutoCloseable autoCloseable = MockitoAnnotations.openMocks(this);
-        // Defina o valor do secret através da reflexão
+        MockitoAnnotations.openMocks(this);
+
         ReflectionTestUtils.setField(tokenService, "secret", "my-secret-key");
-        // Configurar mock do employee
+
         when(employee.getName()).thenReturn("testEmployee");
     }
 
@@ -39,7 +39,7 @@ class TokenServiceTest {
 
     @Test
     void testGenerateTokenFailure() {
-        ReflectionTestUtils.setField(tokenService, "secret", ""); // Set an invalid secret to cause JWTCreationException
+        ReflectionTestUtils.setField(tokenService, "secret", "");
         assertThrows(RuntimeException.class, () -> tokenService.generateToken(employee));
     }
 

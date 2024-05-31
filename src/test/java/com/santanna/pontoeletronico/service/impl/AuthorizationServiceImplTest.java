@@ -23,27 +23,27 @@ class AuthorizationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        AutoCloseable autoCloseable = MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void testLoadUserByUsername_WhenUserExists_ReturnUserDetails() {
-        // Arrange
+
         String username = "john_doe";
         Employee employee = new Employee();
         employee.setName(username);
         when(repository.findByName(username)).thenReturn(employee);
 
-        // Act
+
         UserDetails userDetails = authService.loadUserByUsername(username);
 
-        // Assert
+
         assertEquals(username, userDetails.getUsername());
     }
 
     @Test
     void testLoadUserByUsername_WhenUserDoesNotExist_ThrowUsernameNotFoundException() {
-        // Arrange
+
         String username = "non_existing_user";
         when(repository.findByName(username)).thenThrow(new UsernameNotFoundException(USERNAME_NOT_FOUND));
         try {
