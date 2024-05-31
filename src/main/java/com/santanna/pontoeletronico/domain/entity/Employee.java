@@ -1,17 +1,18 @@
 package com.santanna.pontoeletronico.domain.entity;
 
-import com.santanna.pontoeletronico.domain.dto.auth.RegisterDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Entity(name = "employee")
 @Table(name = "employee")
@@ -22,8 +23,13 @@ import java.util.List;
 public class Employee implements UserDetails {
 
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
+
+    @Column(unique = true, nullable = false)
     private String name;
     private String password;
     private EmployeeRole role;

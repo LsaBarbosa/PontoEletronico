@@ -19,6 +19,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -26,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class EmployeeControllerTest {
-    public static final long ID = 1L;
+    public static final UUID ID = UUID.randomUUID();
     public static final String EMPLOYEE_NAME = "Colaborador";
     private static final Integer INDEX = 0;
     public static final String PASSWORD = "123";
@@ -71,7 +72,7 @@ class EmployeeControllerTest {
 
     @Test
     void whenFindByIdThenReturnSuccess()  {
-        when(employeeService.getEmployeeById(anyLong())).thenReturn((employee));
+        when(employeeService.getEmployeeById(UUID.randomUUID())).thenReturn((employee));
         when(mapper.map(any(), any())).thenReturn(employeeDto);
         ResponseEntity<EmployeeDto> response = employeeController.getEmployeeById(ID);
 
