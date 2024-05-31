@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -22,7 +23,7 @@ public class EmployeeController {
     private ModelMapper modelMapper;
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable Long id) {
+    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable UUID id) {
         var getId = employeeService.getEmployeeById(id);
         return ResponseEntity.ok().body(modelMapper.map(getId, EmployeeDto.class));
     }

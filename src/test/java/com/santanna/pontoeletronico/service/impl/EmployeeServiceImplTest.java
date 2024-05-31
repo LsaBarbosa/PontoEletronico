@@ -17,6 +17,7 @@ import org.modelmapper.ModelMapper;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.*;
 
 class EmployeeServiceImplTest {
 
-    public static final long ID = 1L;
+    public static final UUID ID = UUID.randomUUID();
     public static final String EMPLOYEE = "Colaborador";
     public static final String EMPLOYEE_NOT_FOUND = "Colaborador não encontrado";
     private static final Integer INDEX = 0;
@@ -50,8 +51,9 @@ class EmployeeServiceImplTest {
     @Test
     @DisplayName("When Get Employee By Id Then Return Employee")
     void WhenGetEmployeeByIdThenReturnEmployee() {
-        when(repository.findById(anyLong())).thenReturn(Optional.of(employee));
+        when(repository.findById(ID)).thenReturn(Optional.of(employee));
 
+        // Usa o mesmo ID constante na chamada do serviço
         Employee response = employeeService.getEmployeeById(ID);
 
         assertNotNull(response);
@@ -102,7 +104,7 @@ class EmployeeServiceImplTest {
     @DisplayName("When Delete Employee Then Success")
     void deleteWithSuccess() {
         when(repository.findByNameContainsIgnoreCase(anyString())).thenReturn(employeeOptional);
-        doNothing().when(repository).deleteById(anyLong());
+        doNothing().when(repository).deleteById(UUID.randomUUID());
 
         employeeService.deleteEmployee(EMPLOYEE);
 
@@ -112,7 +114,7 @@ class EmployeeServiceImplTest {
     @Test
     @DisplayName("When Get Employee By Id Then Return Object not found")
     void WhenGetEmployeeByIdThenObjectNotFound() {
-        when(repository.findById(anyLong())).thenThrow(
+        when(repository.findById(UUID.randomUUID())).thenThrow(
                 new ObjectNotFoundException((EMPLOYEE_NOT_FOUND)));
         try {
             employeeService.getEmployeeById(ID);
@@ -139,9 +141,9 @@ class EmployeeServiceImplTest {
     @Test
     @DisplayName(" when update Then Return Data integraty violation")
     void whenUpdateThenReturnDataIntegratyViolation(){
-        when(repository.findById(anyLong())).thenReturn(employeeOptional);
+        when(repository.findById(UUID.randomUUID())).thenReturn(employeeOptional);
         try {
-            employeeOptional.get().setId(2L);
+            employeeOptional.get().setId(UUID.randomUUID());
         }catch (Exception ex){
             assertNotNull(ex);
             assertEquals(DataIntegrityViolationException.class, ex.getClass());

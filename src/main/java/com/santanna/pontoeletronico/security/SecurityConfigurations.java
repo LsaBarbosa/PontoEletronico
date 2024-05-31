@@ -32,7 +32,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.PUT, "/usuarios").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/ponto/horas-extras").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/ponto/registros").hasRole("ADMIN")
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                  )
                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

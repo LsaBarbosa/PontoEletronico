@@ -19,13 +19,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 class AuthTest {
-
     public static final String NAME = "testUser";
     public static final String PASSWORD = "testPassword";
     public static final EmployeeRole EMPLOYEE_ROLE_ADMIN = EmployeeRole.ADMIN;
@@ -58,7 +59,7 @@ class AuthTest {
         authenticationDTO = new AuthenticationDTO(NAME, PASSWORD);
         registerDTO = new RegisterDTO(NAME, PASSWORD, EMPLOYEE_ROLE_ADMIN);
         employee = new Employee(NAME, new BCryptPasswordEncoder().encode(PASSWORD), EMPLOYEE_ROLE_USER);
-        employeeDto = new EmployeeDto(1L, NAME, PASSWORD, EMPLOYEE_ROLE_ADMIN);
+        employeeDto = new EmployeeDto(UUID.randomUUID(), NAME, PASSWORD, EMPLOYEE_ROLE_ADMIN); // Alteração para UUID
     }
 
     @Test
