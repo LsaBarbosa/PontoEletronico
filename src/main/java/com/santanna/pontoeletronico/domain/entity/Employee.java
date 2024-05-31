@@ -1,7 +1,5 @@
 package com.santanna.pontoeletronico.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.santanna.pontoeletronico.domain.dto.auth.RegisterDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
