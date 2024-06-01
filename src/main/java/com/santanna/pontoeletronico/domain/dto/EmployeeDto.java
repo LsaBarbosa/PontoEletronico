@@ -1,7 +1,7 @@
 package com.santanna.pontoeletronico.domain.dto;
 
 
-import com.santanna.pontoeletronico.domain.entity.EmployeeRole;
+import com.santanna.pontoeletronico.domain.role.EmployeeRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

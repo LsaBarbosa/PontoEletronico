@@ -5,7 +5,7 @@ import com.santanna.pontoeletronico.domain.dto.auth.AuthenticationDTO;
 import com.santanna.pontoeletronico.domain.dto.auth.LoginResponseDTO;
 import com.santanna.pontoeletronico.domain.dto.auth.RegisterDTO;
 import com.santanna.pontoeletronico.domain.entity.Employee;
-import com.santanna.pontoeletronico.domain.entity.EmployeeRole;
+import com.santanna.pontoeletronico.domain.role.EmployeeRole;
 import com.santanna.pontoeletronico.repository.EmployeeRepository;
 import com.santanna.pontoeletronico.security.TokenService;
 import com.santanna.pontoeletronico.service.exception.DataIntegrityViolationException;
@@ -57,7 +57,7 @@ class AuthTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         authenticationDTO = new AuthenticationDTO(NAME, PASSWORD);
-        registerDTO = new RegisterDTO(NAME, PASSWORD, EMPLOYEE_ROLE_ADMIN);
+        registerDTO = new RegisterDTO(NAME, PASSWORD, EmployeeRole.ADMIN);
         employee = new Employee(NAME, new BCryptPasswordEncoder().encode(PASSWORD), EMPLOYEE_ROLE_USER);
         employeeDto = new EmployeeDto(UUID.randomUUID(), NAME, PASSWORD, EMPLOYEE_ROLE_ADMIN); // Alteração para UUID
     }

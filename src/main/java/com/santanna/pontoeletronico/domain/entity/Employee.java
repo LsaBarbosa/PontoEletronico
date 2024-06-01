@@ -1,5 +1,6 @@
 package com.santanna.pontoeletronico.domain.entity;
 
+import com.santanna.pontoeletronico.domain.role.EmployeeRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
