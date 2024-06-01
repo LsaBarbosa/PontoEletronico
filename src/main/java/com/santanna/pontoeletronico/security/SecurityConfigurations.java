@@ -56,7 +56,7 @@ public class SecurityConfigurations {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:4200") // Defina a origem permitida
+                        .allowedOrigins("https://ponto-eletronico-nova-alianca.vercel.app") // Defina a origem permitida
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);            }
