@@ -3,7 +3,7 @@ package com.santanna.pontoeletronico.resources;
 import com.santanna.pontoeletronico.domain.dto.auth.AuthenticationDTO;
 import com.santanna.pontoeletronico.domain.dto.auth.LoginResponseDTO;
 import com.santanna.pontoeletronico.domain.dto.auth.RegisterDTO;
-import com.santanna.pontoeletronico.domain.entity.EmployeeRole;
+import com.santanna.pontoeletronico.domain.role.EmployeeRole;
 import com.santanna.pontoeletronico.service.Auth;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

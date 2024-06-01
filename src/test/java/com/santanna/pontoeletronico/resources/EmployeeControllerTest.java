@@ -3,7 +3,7 @@ package com.santanna.pontoeletronico.resources;
 import com.santanna.pontoeletronico.domain.dto.EmployeeDto;
 import com.santanna.pontoeletronico.domain.dto.auth.RegisterDTO;
 import com.santanna.pontoeletronico.domain.entity.Employee;
-import com.santanna.pontoeletronico.domain.entity.EmployeeRole;
+import com.santanna.pontoeletronico.domain.role.EmployeeRole;
 import com.santanna.pontoeletronico.service.EmployeeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +31,7 @@ class EmployeeControllerTest {
     public static final String EMPLOYEE_NAME = "Colaborador";
     private static final Integer INDEX = 0;
     public static final String PASSWORD = "123";
+    public static final EmployeeRole EMPLOYEE_ROLE = EmployeeRole.ADMIN;
     @InjectMocks
     private EmployeeController employeeController;
     @Mock
@@ -123,8 +124,8 @@ class EmployeeControllerTest {
 
 
     private void startEmployee() {
-        employee = new Employee(ID, EMPLOYEE_NAME, PASSWORD, EmployeeRole.ADMIN, null);
-        employeeDto = new EmployeeDto(ID, EMPLOYEE_NAME, PASSWORD, EmployeeRole.ADMIN);
-        registerDTO = new RegisterDTO(EMPLOYEE_NAME, PASSWORD, EmployeeRole.ADMIN);
+        employee = new Employee(ID, EMPLOYEE_NAME, PASSWORD, EMPLOYEE_ROLE, null);
+        employeeDto = new EmployeeDto(ID, EMPLOYEE_NAME, PASSWORD, EMPLOYEE_ROLE);
+        registerDTO = new RegisterDTO(EMPLOYEE_NAME, PASSWORD, EMPLOYEE_ROLE);
     }
 }

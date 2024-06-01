@@ -3,7 +3,8 @@ package com.santanna.pontoeletronico.service.impl;
 import com.santanna.pontoeletronico.domain.dto.EmployeeDto;
 import com.santanna.pontoeletronico.domain.dto.auth.RegisterDTO;
 import com.santanna.pontoeletronico.domain.entity.Employee;
-import com.santanna.pontoeletronico.domain.entity.EmployeeRole;
+
+import com.santanna.pontoeletronico.domain.role.EmployeeRole;
 import com.santanna.pontoeletronico.repository.EmployeeRepository;
 import com.santanna.pontoeletronico.service.exception.DataIntegrityViolationException;
 import com.santanna.pontoeletronico.service.exception.ObjectNotFoundException;
@@ -30,6 +31,7 @@ class EmployeeServiceImplTest {
     public static final String EMPLOYEE_NOT_FOUND = "Colaborador não encontrado";
     private static final Integer INDEX = 0;
     public static final String PASSWORD = "123";
+    public static final EmployeeRole EMPLOYEE_ROLE = EmployeeRole.ADMIN;
     @InjectMocks
     private EmployeeServiceImpl employeeService;
     @Mock
@@ -166,10 +168,10 @@ class EmployeeServiceImplTest {
     }
 
     private void startEmployee() {
-        employee = new Employee(ID, EMPLOYEE, PASSWORD, EmployeeRole.ADMIN, null);
-        employeeDto = new EmployeeDto(ID, EMPLOYEE, PASSWORD, EmployeeRole.ADMIN);
+        employee = new Employee(ID, EMPLOYEE, PASSWORD, EMPLOYEE_ROLE, null);
+        employeeDto = new EmployeeDto(ID, EMPLOYEE, PASSWORD, EMPLOYEE_ROLE);
         employeeOptional = Optional.of(employee);
-        registerDTO = new RegisterDTO(EMPLOYEE, PASSWORD, EmployeeRole.ADMIN);
+        registerDTO = new RegisterDTO(EMPLOYEE, PASSWORD, EMPLOYEE_ROLE);
     }
 
 }
