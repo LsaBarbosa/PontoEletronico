@@ -32,6 +32,7 @@ public class Employee implements UserDetails {
     @Column(unique = true, nullable = false)
     private String name;
     private String password;
+    @Enumerated(EnumType.STRING)
     private EmployeeRole role;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
