@@ -9,6 +9,7 @@ import com.santanna.pontoeletronico.domain.role.EmployeeRole;
 import com.santanna.pontoeletronico.repository.EmployeeRepository;
 import com.santanna.pontoeletronico.security.TokenService;
 import com.santanna.pontoeletronico.service.exception.DataIntegrityViolationException;
+import com.santanna.pontoeletronico.service.impl.Auth;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -3,7 +3,7 @@ package com.santanna.pontoeletronico.resources;
 import com.santanna.pontoeletronico.domain.dto.auth.AuthenticationDTO;
 import com.santanna.pontoeletronico.domain.dto.auth.LoginResponseDTO;
 import com.santanna.pontoeletronico.domain.dto.auth.RegisterDTO;
-import com.santanna.pontoeletronico.service.Auth;
+import com.santanna.pontoeletronico.service.impl.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

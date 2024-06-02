@@ -1,4 +1,4 @@
-package com.santanna.pontoeletronico.service;
+package com.santanna.pontoeletronico.service.impl;
 
 import com.santanna.pontoeletronico.domain.dto.EmployeeDto;
 import com.santanna.pontoeletronico.domain.dto.auth.AuthenticationDTO;

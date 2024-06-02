@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +43,9 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
 
         var newRegister = new TimeRecording();
         newRegister.setEmployee(employee);
-        newRegister.setStartOfWork(LocalDateTime.now());
+        var zoneId = ZoneId.of("America/Sao_Paulo");
+        newRegister.setStartOfWork(ZonedDateTime.now(zoneId).toLocalDateTime());
+
         var save = repository.save(newRegister);
         return new RecordCheckinDto(save);
     }
@@ -56,7 +60,9 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
             throw new DataIntegrityViolationException(WITHOUT_ENTRY_REGISTRATION);
         }
 
-        LocalDateTime timeCheckOut = LocalDateTime.now();
+        var zoneId = ZoneId.of("America/Sao_Paulo");
+        LocalDateTime timeCheckOut = ZonedDateTime.now(zoneId).toLocalDateTime();
+
         recordCheckIn.setEndOfWork(timeCheckOut);
         repository.save(recordCheckIn);
 
