@@ -16,6 +16,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,8 +47,8 @@ class TimeRecordingServiceImplTest {
 
         timeRecording = new TimeRecording();
         timeRecording.setEmployee(employee);
-        timeRecording.setStartOfWork(LocalDateTime.now().minusHours(8));
-        timeRecording.setEndOfWork(LocalDateTime.now());
+        timeRecording.setStartOfWork(ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).minusHours(8));
+        timeRecording.setEndOfWork(ZonedDateTime.now());
     }
 
     @Test
@@ -64,14 +66,16 @@ class TimeRecordingServiceImplTest {
 
     @Test
     void registerCheckOut() {
+        timeRecording.setStartOfWork(ZonedDateTime.now().minusHours(8));
+        timeRecording.setEndOfWork(null);
         when(employeeService.getByName(EMPLOYEE)).thenReturn(employee);
-        when(timeRecordingRepository.findTopByEmployeeAndEndOfWorkIsNullOrderByStartOfWorkDesc(employee))
+        when(timeRecordingRepository.findRegistrationCheckInActive(employee.getName()))
                 .thenReturn(timeRecording);
 
         RecordCheckoutDto result = timeRecordingService.registerCheckOut(EMPLOYEE);
 
         assertNotNull(result);
-        assertEquals(result.getEndOfWorkDate(), LocalDateTime.now().toLocalDate().toString());
+        assertEquals(result.getEndOfWorkDate(), ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).toLocalDate().toString());
         verify(timeRecordingRepository, times(1)).save(timeRecording);
     }
 

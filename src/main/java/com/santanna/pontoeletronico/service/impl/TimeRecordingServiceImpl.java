@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +43,7 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
 
         var newRegister = new TimeRecording();
         newRegister.setEmployee(employee);
-        newRegister.setStartOfWork(LocalDateTime.now());
+        newRegister.setStartOfWork(ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")));
         var save = repository.save(newRegister);
         return new RecordCheckinDto(save);
     }
@@ -49,18 +51,15 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
     @Override
     public RecordCheckoutDto registerCheckOut(String name) {
         var employee = employeeService.getByName(name);
-
-        TimeRecording recordCheckIn = repository.findTopByEmployeeAndEndOfWorkIsNullOrderByStartOfWorkDesc(employee);
-
-        if (recordCheckIn == null) {
+        var activeCheckin = repository.findRegistrationCheckInActive(employee.getName());
+        if (activeCheckin == null || activeCheckin.getEndOfWork() != null) {
             throw new DataIntegrityViolationException(WITHOUT_ENTRY_REGISTRATION);
         }
 
-        LocalDateTime timeCheckOut = LocalDateTime.now();
-        recordCheckIn.setEndOfWork(timeCheckOut);
-        repository.save(recordCheckIn);
+        activeCheckin.setEndOfWork(ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")));
+        repository.save(activeCheckin);
 
-        return TimeFormattingUtils.formatRecordCheckoutDto(recordCheckIn);
+        return TimeFormattingUtils.formatRecordCheckoutDto(activeCheckin);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.santanna.pontoeletronico.domain.entity.TimeRecording;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 public class TimeFormattingUtils {
 
     public static RecordCheckoutDto formatRecordCheckoutDto(TimeRecording record) {
-        LocalDateTime timeCheckOut = record.getEndOfWork() != null ? record.getEndOfWork() : LocalDateTime.now();
+        ZonedDateTime timeCheckOut = record.getEndOfWork() != null ? record.getEndOfWork() : ZonedDateTime.now();
 
         Duration duration = TimeFormattingUtils.calculateDuration(record.getStartOfWork(), timeCheckOut);
         long timeWorkedInMinutes = TimeFormattingUtils.calculateTimeWorkedInMinutes(duration);
@@ -36,8 +37,8 @@ public class TimeFormattingUtils {
 
 
     public static DetailedTimeRecordingDto toDetailedTimeRecordingDto(TimeRecording record) {
-        LocalDateTime timeCheckin = record.getEndOfWork() != null ? record.getStartOfWork() : LocalDateTime.now();
-        LocalDateTime timeCheckOut = record.getStartOfWork() != null ? record.getEndOfWork() : LocalDateTime.now();
+        ZonedDateTime timeCheckin = record.getEndOfWork() != null ? record.getStartOfWork() : ZonedDateTime.now();
+        ZonedDateTime timeCheckOut = record.getStartOfWork() != null ? record.getEndOfWork() : ZonedDateTime.now();
 
         Duration duration = TimeFormattingUtils.calculateDuration(record.getStartOfWork(), timeCheckOut);
         long timeWorkedInMinutes = TimeFormattingUtils.calculateTimeWorkedInMinutes(duration);
@@ -84,7 +85,7 @@ public class TimeFormattingUtils {
         return String.format("%02d:%02d", hours, minutes);
     }
 
-    public static Duration calculateDuration(LocalDateTime startTime, LocalDateTime endTime) {
+    public static Duration calculateDuration(ZonedDateTime startTime, ZonedDateTime endTime) {
         return Duration.between(startTime, endTime);
     }
 
