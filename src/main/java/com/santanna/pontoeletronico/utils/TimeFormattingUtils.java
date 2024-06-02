@@ -6,7 +6,6 @@ import com.santanna.pontoeletronico.domain.dto.RecordCheckoutDto;
 import com.santanna.pontoeletronico.domain.entity.TimeRecording;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;

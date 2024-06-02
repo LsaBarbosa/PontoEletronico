@@ -26,10 +26,13 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
 
     public static final String WITHOUT_ENTRY_REGISTRATION = "Não há registro de entrada para o colaborador";
     public static final String WITHOUT_EXIT_REGISTRATION = "Registro de Saída não registrado, encerre o registro de entrada aberto";
-    @Autowired
-    private TimeRecordingRepository repository;
-    @Autowired
-    private EmployeeService employeeService;
+    private final TimeRecordingRepository repository;
+    private final EmployeeService employeeService;
+
+    public TimeRecordingServiceImpl(EmployeeService employeeService, TimeRecordingRepository repository) {
+        this.employeeService = employeeService;
+        this.repository = repository;
+    }
 
 
     @Override
@@ -79,16 +82,18 @@ public class TimeRecordingServiceImpl implements TimeRecordingService {
     public List<DetailedTimeRecordingDto> searchRecordsByDateRange(String name, LocalDate startDate, LocalDate endDate) {
         var employee = employeeService.getByName(name);
 
-        LocalDateTime startDateTime = startDate.atStartOfDay();
-        LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay();
+        ZonedDateTime startDateTimeZoned = startDate.atStartOfDay(ZoneId.of("America/Sao_Paulo"));
+        ZonedDateTime endDateTimeZoned = endDate.plusDays(1).atStartOfDay(ZoneId.of("America/Sao_Paulo"));
+
+        LocalDateTime startDateTime = startDateTimeZoned.toLocalDateTime();
+        LocalDateTime endDateTime = endDateTimeZoned.toLocalDateTime();
 
         List<TimeRecording> records = repository.findByEmployeeAndStartOfWorkBetween(employee, startDateTime, endDateTime);
 
         return records.stream()
                 .map(TimeFormattingUtils::toDetailedTimeRecordingDto)
                 .collect(Collectors.toList());
-    }
-
+}
 }
 
 
