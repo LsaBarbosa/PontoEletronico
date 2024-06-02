@@ -1,5 +1,5 @@
 package com.santanna.pontoeletronico.security;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,7 +19,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
-    final   SecurityFilter securityFilter;
+    final
+    SecurityFilter securityFilter;
 
     public SecurityConfigurations(SecurityFilter securityFilter) {
         this.securityFilter = securityFilter;
@@ -36,6 +37,8 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST, "/auth/register").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/usuarios").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/usuarios").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/ponto/horas-extras").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/ponto/registros").permitAll()
                         .anyRequest().authenticated()
                  )
                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
