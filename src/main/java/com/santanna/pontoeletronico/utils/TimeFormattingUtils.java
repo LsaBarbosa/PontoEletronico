@@ -6,9 +6,12 @@ import com.santanna.pontoeletronico.domain.dto.RecordCheckoutDto;
 import com.santanna.pontoeletronico.domain.entity.TimeRecording;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class TimeFormattingUtils {
@@ -65,13 +68,15 @@ public class TimeFormattingUtils {
     }
 
     public static OvertimeDto calculateOvertime(List<TimeRecording> records) {
-        long totalOvertimeInMinutes = 0;
+        Map<LocalDate, Long> dailyWorkMinutes = records.stream()
+                .collect(Collectors.groupingBy(
+                        record -> record.getStartOfWork().toLocalDate(),
+                        Collectors.summingLong(record -> Duration.between(record.getStartOfWork(), record.getEndOfWork()).toMinutes())
+                ));
 
-        for (TimeRecording registro : records) {
-            long timeWorkedInMinutes = Duration.between(registro.getStartOfWork(), registro.getEndOfWork()).toMinutes();
-            long overtimeInMinutes = Math.max(timeWorkedInMinutes - (8 * 60), 0);
-            totalOvertimeInMinutes += overtimeInMinutes;
-        }
+        long totalOvertimeInMinutes = dailyWorkMinutes.values().stream()
+                .mapToLong(workMinutes -> Math.max(workMinutes - (8 * 60), 0))
+                .sum();
 
         String totalOvertime = formatHoursAndMinutes(totalOvertimeInMinutes);
 

@@ -57,10 +57,11 @@ public class SecurityConfigurations {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://ponto-eletronico-nova-alianca.vercel.app") // Defina a origem permitida
+                        .allowedOrigins("https://ponto-eletronico-nova-alianca.vercel.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true);            }
+                        .allowCredentials(true);
+            }
         };
     }
 }

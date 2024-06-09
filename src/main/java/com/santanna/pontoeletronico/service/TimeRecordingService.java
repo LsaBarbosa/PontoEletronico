@@ -18,3 +18,5 @@ public interface TimeRecordingService {
     List<DetailedTimeRecordingDto> searchRecordsByDateRange(String name, LocalDate startDate, LocalDate endDate);
 
 }
+
+
